@@ -19,7 +19,10 @@ public class SignUpServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		doPost(req, resp);
+		PrintWriter print = resp.getWriter();
+		print.write("Sign up servlet");
+		print.flush();
+		print.close();
 	}
 	
 	@Override
