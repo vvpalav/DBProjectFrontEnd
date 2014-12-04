@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+
+	function validateUser() {
+		var user = document.getElementById('username').value;
+		var pass = document.getElementById('password').value;
+	    var jsonString = '{"username": ' + user + ', "password": ' + pass +"}";
+		if (user.length > 0 && pass.length > 0) {
+			if (window.XMLHttpRequest) {
+				xmlhttp = new XMLHttpRequest();
+			} else {
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var json = JSON.parse(xmlhttp.responseText);
+					if(json.status == "success"){
+						document.getElementById('label').innerHTML = "Login successful";
+					} else if (json.status == "failure"){
+						document.getElementById('label').innerHTML = "Invalid Username or Password";
+					}
+				}
+			};
+			xmlhttp.open("POST", "LoginServlet", true);
+			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xmlhttp.send("json="+jsonString);
+		} else {
+			document.getElementById('label').innerHTML = "Missing Username or Password";	
+		}
+	}
+</script>
+</head>
+<body>
+<form>
+	Username :  <input id="username" type="text"> <br><br>
+	Password :  <input id="password" type="password"><br><br>
+	<button type="button" onclick="validateUser()">Submit</button><br>
+	<label id="label"></label>
+</form>
+</body>
+</html>
