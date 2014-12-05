@@ -28,7 +28,6 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		JSONObject json = new JSONObject();
-		boolean redirect = false;
 		try {
 			json.put("status", "failure");
 			JSONObject input = new JSONObject(req.getParameter("json"));
@@ -39,18 +38,13 @@ public class LoginServlet extends HttpServlet {
 			if (db.authenticateUser(username, password)) {
 				json.put("status", "success");
 				System.out.println(username + " validated successfully");
-				redirect = true;
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} finally {
-			if(redirect){
-				getServletContext().getRequestDispatcher("/WelcomeServlet").forward(req, resp);
 			}
 			PrintWriter print = resp.getWriter();
 			print.write(json.toString());
 			print.flush();
 			print.close();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -15,6 +15,7 @@ public class WelcomeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		System.out.println("Welcome Servlet");
 		PrintWriter print = resp.getWriter();
 		print.write("Welcome here");
 		print.flush();
@@ -24,6 +25,7 @@ public class WelcomeServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		System.out.println("Welcome Servlet");
 		PrintWriter print = resp.getWriter();
 		print.write("Welcome here");
 		print.flush();
