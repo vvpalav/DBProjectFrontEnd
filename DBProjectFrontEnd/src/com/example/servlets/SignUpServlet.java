@@ -31,9 +31,11 @@ public class SignUpServlet extends HttpServlet {
 		JSONObject out = new JSONObject();
 		try {
 			JSONObject json = new JSONObject(req.getParameter("json"));
-			System.out.println("Received Insert user request: " + json.toString());
+			System.out.println("Received register user request: " + json.toString());
 			out.put("status", "failure");
-			if(db.insertUserIntoDB(json)){
+			if(json.getString("type").equals("user") && db.insertUserIntoDB(json)){
+				out.put("status", "success");
+			} else if (json.getString("type").equals("artist") && db.insertArtistIntoDB(json)){
 				out.put("status", "success");
 			}
 			PrintWriter print = resp.getWriter();

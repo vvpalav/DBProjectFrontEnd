@@ -79,14 +79,14 @@
 		var jsonString = '{ "uid": "' + user + '", "password": "' + pass
 				+ '", "firstname": "' + firstname + '", "lastname": "'
 				+ lastname + '", "email": "' + email + '", "dob": "' + dob
-				+ '", "city": "' + city + '"}';
+				+ '", "city": "' + city + '", "type" : "user"}';
 		
 		return jsonString;
 	}
 
 	function validateFields() {
 		var email = document.getElementById("email").value;
-		if (email.indexOf("@") == -1) {
+		if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
 			alert("invalid email address");
 			return 0;
 		}

@@ -16,6 +16,12 @@ public class DBHelper {
 	private Connection conn;
 	private static DBHelper db;
 	
+	
+	public static void main(String[] args){
+		DBHelper db = DBHelper.getDBInstance();
+		System.out.println(db.getCompanyIdByName("Vev"));
+	}
+	
 	private DBHelper(){
 		try {
 			System.out.println("Connecting to database");
@@ -72,6 +78,62 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public boolean insertArtistIntoDB(JSONObject json){
+		try {
+			int count = getCompanyIdByName(json.getString("company"));
+			if(count == -1){
+				count = insertCompanyIntoDB(json.getString("company"));
+			}
+			String sql = "insert into artist_info (aid, password, aname, webpage, com_id) "
+					+ " values (?, ?, ?, ?, ?)";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("aid"));
+			stmt.setString(2, json.getString("password"));
+			stmt.setString(3, json.getString("firstname") + " " + json.getString("lastname"));
+			stmt.setString(4, json.getString("webpage"));
+			stmt.setInt(5, count);
+			return stmt.executeUpdate() > 0;
+		} catch (JSONException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public int insertCompanyIntoDB(String name){
+		String sql = "select count(*) from company_info";
+		try {
+			ResultSet rs = conn.createStatement().executeQuery(sql);
+			rs.next();
+			int count = rs.getInt(1);
+			sql = "insert into company_info values (?, ?)";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, count+1);
+			stmt.setString(2, name);
+			stmt.executeUpdate();
+			System.out.println("Company inserted successfully: " + name);
+			return count+1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public int getCompanyIdByName(String name){
+		String sql = "select com_id from company_info where com_name = ?";
+		PreparedStatement stmt;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()){
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }
 

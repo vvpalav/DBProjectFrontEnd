@@ -30,11 +30,21 @@
 		}
 	}
 
-	function signUp(){
-		window.location = "sign_up.html";
-	}
 	
-</script>
+	function signUp() {
+		var radios = document.getElementsByName('type');
+		for (var i = 0; i < radios.length; i++) {
+			if (radios[i].checked) {
+				if (radios[i].value == "user") {
+					window.location = "sign_up.html";
+				} else if (radios[i].value == "artist"){
+					window.location = "artist_sign_up.html";
+				}
+				break;
+			}
+		}
+	}
+		</script>
 <link rel="stylesheet" href="css/styles.css">
 <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -42,6 +52,9 @@
 <body>
     <div class="wrapper">
       <h1>Login to Web Application</h1><p/>
+      	<input id="user" type="radio" name="type" value="user" checked> User
+		<input id="artist" type="radio" name="type" value="artist"> Artist
+		<br><br>
         <input id="username" type="text" name="username" placeholder="Username">
         <input id="password" type="password" name="password" placeholder="Password">
         <input onclick="signUp()" type="button" name="signup" value="Sign Up">

@@ -3,6 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <title>Artist Sign Up</title>
+<script type="text/javascript">
+		function insertUserIntoSystem(){
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("POST", "SignUpServlet", true);
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var json = JSON.parse(xmlhttp.responseText);
+					if (json.status == "success") {
+						alert("Account Created Successfully");
+						window.location = "index.html";
+					} else if (json.status == "failure") {
+						alert("Failed to Create Account");
+					}
+				}
+			};
+			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xmlhttp.send("json=" + createJSON());
+		}
+		
+		function createJSON() {
+			var firstname = document.getElementById("firstname").value;
+			var lastname = document.getElementById("lastname").value;
+			var user = document.getElementById("username").value;
+			var pass = document.getElementById("password").value;
+			var company = document.getElementById("company").value;
+			var page = document.getElementById("page").value;
+			
+			var jsonString = '{ "aid": "' + user + '", "password": "' + pass
+					+ '", "firstname": "' + firstname + '", "lastname": "'
+					+ lastname + '", "company" : "' + company + '", "webpage": "' + page 
+					+ '", "type" : "artist"}';
+			return jsonString;
+		}
+
+</script>
 <link rel="stylesheet" href="css/styles.css">
 <link href='http://fonts.googleapis.com/css?family=Oswald'
 	rel='stylesheet' type='text/css'>
@@ -17,17 +52,8 @@
 		<input type="text" placeholder="Last Name" name="lastname" id="lastname"> 
 		<input type="text" placeholder="Username" name="username" id="username"> 
 		<input type="password" placeholder="Password" name="password" id="password"> 
-		<input type="email" placeholder="Email" name="email" id="email"> 
-		<input type="text" placeholder="City" name="city" id="city"> 
-		<select id="bmonth" name="bmonth">
-			<option>Birth Month</option>
-		</select> 
-		<select id="bdate" name="bdate">
-			<option>Birth Date</option>
-		</select> 
-		<select id="byear" name="byear">
-			<option>Birth Year</option>
-		</select>
+		<input type="url" placeholder="Webpage" name="page" id="page">
+		<input type="text" placeholder="Company Name" name="company" id="company">  
 		<input type="submit" onclick="insertUserIntoSystem()" value="Register">
 	</div>
 </body>
