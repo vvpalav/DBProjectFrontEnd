@@ -56,16 +56,17 @@ public class DBHelper {
 		String sql = "insert into user_info values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, json.getInt("uid"));
+			stmt.setString(1, json.getString("uid"));
 			stmt.setString(2, json.getString("password"));
-			stmt.setString(3, json.getString("firstName"));
-			stmt.setString(4, json.getString("lastName"));
+			stmt.setString(3, json.getString("firstname"));
+			stmt.setString(4, json.getString("lastname"));
 			stmt.setDate(5, Date.valueOf(json.getString("dob")));
 			stmt.setString(6, json.getString("email"));
 			stmt.setString(7, json.getString("city"));
-			stmt.setInt(8, json.getInt("user_repo"));
-			stmt.setDate(9, Date.valueOf(json.getString("last_acc_date")));
-			stmt.setDate(10, Date.valueOf(json.getString("reg_date")));
+			stmt.setInt(8, 0);
+			stmt.setDate(9, new Date(new java.util.Date().getTime()));
+			stmt.setDate(10, new Date(new java.util.Date().getTime()));
+			return (stmt.executeUpdate() > 0);
 		} catch (SQLException | JSONException e) {
 			System.out.println("Failed to insert user into DB");
 			e.printStackTrace();

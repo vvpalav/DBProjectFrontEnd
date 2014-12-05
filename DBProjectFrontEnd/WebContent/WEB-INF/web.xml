@@ -34,14 +34,4 @@
       <url-pattern>/SignUpServlet</url-pattern>
   </servlet-mapping>
   
-      <servlet>
-      <servlet-name>WelcomeServlet</servlet-name>
-      <servlet-class>com.example.servlets.WelcomeServlet</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-      <servlet-name>WelcomeServlet</servlet-name>
-      <url-pattern>/WelcomeServlet</url-pattern>
-  </servlet-mapping>
-  
 </web-app>
