@@ -1,3 +1,7 @@
+body{
+  background:url("http://marshall-design.com/codepen/abs6.jpg");
+}
+
 #cssmenu ul,
 #cssmenu li,
 #cssmenu span,
@@ -186,4 +190,8 @@
 		position:relative;
 		left:1500px;
 }
-
+#inputdiv {
+			color:red;
+			position : fixed;
+			left:40%;
+}
