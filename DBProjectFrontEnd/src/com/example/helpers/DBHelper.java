@@ -12,21 +12,21 @@ import com.mysql.jdbc.Connection;
 
 public class DBHelper {
 	
-	private final String dbURL = "jdbc:mysql://localhost:3306/ProjectDBSchema";
+	private final String dbURL = "jdbc:mysql://db-project.ctg5kek7aepz.us-east-1.rds.amazonaws.com:3306/ProjectDBSchema";
 	private Connection conn;
 	private static DBHelper db;
 	
 	
 	public static void main(String[] args){
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getCompanyIdByName("Vev"));
+		System.out.println(db.getCompanyIdByName("Vevo"));
 	}
 	
 	private DBHelper(){
 		try {
 			System.out.println("Connecting to database");
 			Class.forName("com.mysql.jdbc.Driver");
-			this.conn = (Connection) DriverManager.getConnection(dbURL, "root", "");
+			this.conn = (Connection) DriverManager.getConnection(dbURL, "admin", "adminpassword");
 			System.out.println("Connected to database");
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println("Cannot connect the database!");
