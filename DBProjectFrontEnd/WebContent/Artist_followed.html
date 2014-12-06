@@ -18,6 +18,7 @@
 				var artist = (json["data"]);
 			} 
 		};
+		document.write(json["data"]);
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json="+jsonString);
 		
@@ -25,8 +26,7 @@
   function createDynamicURL()
   {
 	 var result = (json["data"]);
-	 alert(json["data"]);
-	 
+	 document.write(json["data"]);
   }
   
 
@@ -39,7 +39,7 @@
 <div id= "artistlist">
 <p> These are the artists you follow</p>
 <ul class="navigation">
-    <li><a href="javascript:window.location=createDynamicURL();" > employee info </a></li>
+    <li><a id = "firstartist" href="javascript:window.location=createDynamicURL();"  > Artist info </a></li>
     <li><a href="bedbath.html">Bed &amp; Bath</a></li>
     <li><a href="dining.html">Fine Dining</a></li>
     <li><a href="lighting.html">Lighting</a></li>

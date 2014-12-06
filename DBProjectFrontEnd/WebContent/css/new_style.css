@@ -190,4 +190,8 @@ body{
 		position:relative;
 		left:1500px;
 }
-
+#inputdiv {
+			color:red;
+			position : fixed;
+			left:40%;
+}

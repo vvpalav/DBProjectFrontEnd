@@ -1,46 +1,146 @@
-<!doctype html>
-<html lang=''>
+<!DOCTYPE html>
+<html>
 <head>
-   <meta charset='utf-8'>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <link rel="stylesheet" href="css/new_style.css">
-   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-   <script src="script.js"></script>
-   <title>Information Update</title>
+<meta charset="UTF-8">
+<title>Update Your Information</title>
+<script type="text/javascript">
+		
+		 var months = [];
+		 months.push("January");
+		 months.push("February"); 
+		 months.push("March"); 
+		 months.push("April");
+		 months.push("May"); 
+		 months.push("June");
+		 months.push("July");
+		 months.push("August");
+		 months.push("September");
+		 months.push("October");
+		 months.push("November");
+		 months.push("December");
+		
+		 function initialize(){
+		   var mon = document.getElementById("bmonth");
+		   for (var i = 0; i < months.length; i++) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = months[i];
+		       optn.value = months[i];
+		       mon.options.add(optn);
+		     }
+		
+		   var date = document.getElementById("bdate");
+		   for (var i = 1; i < 32; i++) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = i;
+		       optn.value = i;
+		       date.options.add(optn);
+		     }
+		   
+		   var year = document.getElementById("byear");
+		   for (var i = 2014; i >= 1960; i--) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = i;
+		       optn.value = i;
+		       year.options.add(optn);
+		     }
+		 }
+		
+		 function insertUserIntoSystem(){
+			if (validateFields() == 1) {
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("POST", "SignUpServlet", true);
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						var json = JSON.parse(xmlhttp.responseText);
+						if (json.status == "success") {
+							alert("Account Created Successfully");
+							window.location = "index.html";
+						} else if (json.status == "failure") {
+							alert("Failed to Create Account");
+						}
+					}
+				};
+				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xmlhttp.send("json=" + createJSON());
+			}
+		}
+		
+		function createJSON() {
+			var email = document.getElementById("email").value;
+			var byear = document.getElementById("byear").value;
+			var bmonth = document.getElementById("bmonth");
+			var bdate = document.getElementById("bdate").value;
+			var firstname = document.getElementById("firstname").value;
+			var lastname = document.getElementById("lastname").value;
+			var user = document.getElementById("username").value;
+			var pass = document.getElementById("password").value;
+			var dob = byear + "-" + bmonth.selectedIndex + "-" + bdate;
+			var city = document.getElementById("city").value;
+			var jsonString = '{ "uid": "' + user + '", "password": "' + pass
+					+ '", "firstname": "' + firstname + '", "lastname": "'
+					+ lastname + '", "email": "' + email + '", "dob": "' + dob
+					+ '", "city": "' + city + '", "type" : "user"}';
+			
+			return jsonString;
+		}
+		
+		function validateFields() {
+			var email = document.getElementById("email").value;
+			if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
+				alert("invalid email address");
+				return 0;
+			}
+		
+			var byear = document.getElementById("byear").value;
+			if (byear == "Birth Year") {
+				alert("Invalid Birth Year");
+				return 0;
+			}
+		
+			var bmonth = document.getElementById("bmonth").value;
+			if (bmonth == "Birth Month") {
+				alert("Please select Birth month");
+				return 0;
+			}
+		
+			var bdate = document.getElementById("bdate").value;
+			if (bdate == "Birth Date") {
+				alert("Please select Birth Date");
+				return 0;
+			}
+			
+			var city = document.getElementById("city").value;
+			if(city == "City" || city.length == 0){
+				alert("Please Provide City");
+				return 0;
+			}
+			return 1;
+		}
+</script>
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link href='http://fonts.googleapis.com/css?family=Oswald'
+	rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css'>
 </head>
-<body bgcolor="black">
-
-<div id='cssmenu'>
-<ul>
-   <li><a href='#'><span>Home</span></a></li>
-   <li class='active has-sub'><a href='#'><span>Products</span></a>
-      <ul>
-         <li class='has-sub'><a href='#'><span>Product 1</span></a>
-            <ul>
-               <li><a href='#'><span>Sub Product</span></a></li>
-               <li class='last'><a href='#'><span>Sub Product</span></a></li>
-            </ul>
-         </li>
-         <li class='has-sub'><a href='#'><span>Product 2</span></a>
-            <ul>
-               <li><a href='#'><span>Sub Product</span></a></li>
-               <li class='last'><a href='#'><span>Sub Product</span></a></li>
-            </ul>
-         </li>
-      </ul>
-   </li>
-   <li><a href='http://localhost:8080/DBProjectFrontEnd/Artist_followed.html'><span>Artists Followed</span></a></li>
-   <li class='last'><a href='#'><span>Update Your Information</span></a></li>
-</ul>
-</div>
- <div id= "searchbar">
-  <form>
-              <input type="text" placeholder="Search..." required id="searchKey">
-              <input type="button" value="Search" id = "searchbutton" onclick = search()>
-                                
-</form>
-</div>
-
+<body onload="initialize()">
+	<div class="wrapper">
+		<h1>Update Your Information</h1>
+		<p>Please provide following information to update</p>
+		<input type="text" placeholder="First Name" name="firstname" id="firstname"> 
+		<input type="text" placeholder="Last Name" name="lastname" id="lastname"> 
+		<input type="email" placeholder="Email" name="email" id="email"> 
+		<input type="text" placeholder="City" name="city" id="city"> 
+		<select id="bmonth" name="bmonth">
+			<option>Birth Month</option>
+		</select> 
+		<select id="bdate" name="bdate">
+			<option>Birth Date</option>
+		</select> 
+		<select id="byear" name="byear">
+			<option>Birth Year</option>
+		</select>
+		<input type="submit" onclick="insertUserIntoSystem()" value="Update">
+	</div>
 </body>
 </html>

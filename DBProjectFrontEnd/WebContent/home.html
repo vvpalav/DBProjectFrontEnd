@@ -15,11 +15,21 @@
    function initialize(){
 	   document.getElementById("link").src = "Artist_followed.html?user="+user;
 	   document.getElementById("link2").src = "all_options.html?user="+user;
+	   //alert("hello");
+	   document.getElementById("p1").innerHTML = "New text!";
    }
 	function search()
 	{
 		a = document.getElementById("searchKey").innerHTML;
 		alert("You have searched for "+document.getElementById('searchKey').value);
+	}
+	function updatefunction()
+	{	
+		window.location="update_information.html?user="+user;
+	}
+	function artistfunction()
+	{
+		window.location = "Artist_followed.html?user="+user;
 	}
 </script>
 </head>
@@ -44,8 +54,8 @@
          </li>
       </ul>
    </li>
-   <li><a href = "Artist_followed.html"><span>Artists Followed</span></a></li>
-   <li class='last'><a href='update_information.html'><span>Update Your Information</span></a></li>
+   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
+   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
 </ul>
 </div>
  <div id= "searchbar">
@@ -55,9 +65,7 @@
                                 
 </form>
 </div>
-<div id="userInfo">
-<p> Hello User</p>
-</div>
+<p id="p1">Hello World!</p>
 <div id="frameone">
 <iframe id="link" width="400" height="300" seamless></iframe>
 </div>
