@@ -30,13 +30,21 @@ public class FetchDataFromDB extends HttpServlet{
 			JSONObject json = new JSONObject(req.getParameter("json"));
 			System.out.println(json);
 			if(json.getString("type").equals("fetchArtistListForUser")){
-				JSONObject out = db.getArtistListForUser(json.getString("username"));
-				PrintWriter print = resp.getWriter();
-				print.write(out.toString());
-				print.flush();
-				print.close();
+				writeOnResponse(resp, db.getArtistListForUser(json.getString("username")));
+				
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeOnResponse(HttpServletResponse resp, JSONObject json){
+		try {
+			PrintWriter print = resp.getWriter();
+			print.write(json.toString());
+			print.flush();
+			print.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
