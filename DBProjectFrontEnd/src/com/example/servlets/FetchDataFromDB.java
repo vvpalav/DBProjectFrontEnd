@@ -28,6 +28,7 @@ public class FetchDataFromDB extends HttpServlet{
 		
 		try {
 			JSONObject json = new JSONObject(req.getParameter("json"));
+			System.out.println(json);
 			if(json.getString("type").equals("fetchArtistListForUser")){
 				JSONObject out = db.getArtistListForUser(json.getString("username"));
 				PrintWriter print = resp.getWriter();

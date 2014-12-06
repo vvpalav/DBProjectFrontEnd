@@ -9,6 +9,13 @@
    <script src="script.js"></script>
    <title>Homepage</title>
    <script type="text/javascript">
+   
+   var user = (window.location.search.replace("?", "").split("=")[1]);
+   
+   function initialize(){
+	   document.getElementById("link").src = "Artist_followed.html?user="+user;
+	   document.getElementById("link2").src = "all_options.html?user="+user;
+   }
 	function search()
 	{
 		a = document.getElementById("searchKey").innerHTML;
@@ -16,7 +23,7 @@
 	}
 </script>
 </head>
-<body bgcolor="black">
+<body onload="initialize()">
 
 <div id='cssmenu'>
 <ul>
@@ -37,8 +44,8 @@
          </li>
       </ul>
    </li>
-   <li><a href='http://localhost:8080/DBProjectFrontEnd/Artist_followed.html'><span>Artists Followed</span></a></li>
-   <li class='last'><a href='http://localhost:8080/DBProjectFrontEnd/update_information.html'><span>Update Your Information</span></a></li>
+   <li><a href = "Artist_followed.html"><span>Artists Followed</span></a></li>
+   <li class='last'><a href='update_information.html'><span>Update Your Information</span></a></li>
 </ul>
 </div>
  <div id= "searchbar">
@@ -52,10 +59,10 @@
 <p> Hello User</p>
 </div>
 <div id="frameone">
-<iframe src="http://localhost:8080/DBProjectFrontEnd/Artist_followed.html" width="400" height="300" seamless ></iframe>
+<iframe id="link" width="400" height="300" seamless></iframe>
 </div>
 <div id="frametwo" >
-<iframe src="http://localhost:8080/DBProjectFrontEnd/all_options.html" width="400" height="300" seamless ></iframe>
+<iframe src="link2" width="400" height="300" seamless ></iframe>
 </div>
 <div id="content_for_user">
 <p>These are the upcoming concerts</p>
