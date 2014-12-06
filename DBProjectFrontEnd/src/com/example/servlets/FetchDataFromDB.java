@@ -25,12 +25,17 @@ public class FetchDataFromDB extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
 		try {
 			JSONObject json = new JSONObject(req.getParameter("json"));
-			if(json.getString("type").equals("fetchArtistListForUser")){
+			String type = json.getString("type");
+			System.out.println("Received data fetch request with type: " + type);
+			if(type.equalsIgnoreCase("fetchArtistListForUser")){
 				writeOnResponse(resp, db.getArtistListForUser(json.getString("username")));
-				
+			} else if(type.equalsIgnoreCase("fetchArtistInfoAndConcertList")){
+				String aname = json.getString("aname");
+				JSONObject object = db.getArtistInfo(aname);
+				object.put("concertList", db.getConcertListForArtist(aname));
+				writeOnResponse(resp, object);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -38,6 +43,7 @@ public class FetchDataFromDB extends HttpServlet{
 	}
 	
 	public void writeOnResponse(HttpServletResponse resp, JSONObject json){
+		System.out.println("returned " + json);
 		try {
 			PrintWriter print = resp.getWriter();
 			print.write(json.toString());
