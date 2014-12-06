@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.example.helpers.json.org.json.JSONArray;
 import com.example.helpers.json.org.json.JSONException;
 import com.example.helpers.json.org.json.JSONObject;
 import com.mysql.jdbc.Connection;
@@ -16,10 +17,9 @@ public class DBHelper {
 	private Connection conn;
 	private static DBHelper db;
 	
-	
 	public static void main(String[] args){
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getCompanyIdByName("Vevo"));
+		System.out.println(db.getArtistListForUser("palavvinayak123"));
 	}
 	
 	private DBHelper(){
@@ -151,6 +151,25 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+	
+	public JSONObject getArtistListForUser(String username){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select a.aname from artist_info a, user_to_artist_follow u "
+				+ " where a.aid = u.following_aid and u.my_uid = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
 	}
 }
 

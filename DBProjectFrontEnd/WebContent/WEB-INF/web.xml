@@ -34,4 +34,14 @@
       <url-pattern>/SignUpServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+      <servlet-name>FetchDataFromDB</servlet-name>
+      <servlet-class>com.example.servlets.FetchDataFromDB</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+      <servlet-name>FetchDataFromDB</servlet-name>
+      <url-pattern>/FetchDataFromDB</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
