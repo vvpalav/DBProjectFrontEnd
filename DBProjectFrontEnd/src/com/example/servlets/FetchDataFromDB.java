@@ -27,6 +27,7 @@ public class FetchDataFromDB extends HttpServlet{
 			throws ServletException, IOException {
 		try {
 			JSONObject json = new JSONObject(req.getParameter("json"));
+			System.out.println(json);
 			String type = json.getString("type");
 			System.out.println("Received data fetch request with type: " + type);
 			if(type.equalsIgnoreCase("fetchArtistListForUser")){
