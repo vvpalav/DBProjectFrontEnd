@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang=''>
+<head>
+   <meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="css/new_style.css">
+   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+   <script src="script.js"></script>
+   <title>Home page</title>
+   <script type="text/javascript">
+   
+   var user = (window.location.search.replace("?", "").split("=")[1]);
+   
+   function initialize(){
+	   document.getElementById("p1").innerHTML = "Hello "+user +" !";
+   }
+	function search()
+	{
+		a = document.getElementById("searchKey").innerHTML;
+		alert("You have searched for "+document.getElementById('searchKey').value);
+	}
+	function updatefunction()
+	{	
+		window.location="update_information.html?user="+user;
+	}
+	function artistfunction()
+	{
+		window.location = "Artist_followed.html?user="+user;
+	}
+	function signoutfunction()
+	{
+		window.location = "index.html";
+	}
+	function genrelink()
+	{
+		window.location = "genres_liked.html";
+	}
+	function homecallingfunction()
+	{
+		window.location = "home.html";
+	}
+</script>
+</head>
+<body onload="initialize()">
+
+<div id='cssmenu'>
+<ul>
+   <li><a id="homelink" href="#" onclick="homecallingfunction();"><span>Home</span></a></li>
+   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
+   <li><a id="genrelink" href="#" onclick="genrelink();"><span>Genres liked</span></a></li>
+   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
+   <li><a id="updatelink" href="#" onclick="signoutfunction();"><span><span>Sign Out</span></span></a></li>
+</ul>
+</div>
+ <div id= "searchbar">
+  <form>
+              <input type="text" placeholder="Search for upcoming events" required id="searchKey">
+              <input type="button" value="Search" id = "searchbutton" onclick = search()>
+                                
+</form>
+</div>
+<div id= "usertext">
+<p id="p1">Hello User!</p>
+</div>
+
+
+<div id="content_for_user">
+<p>These are the upcoming concerts</p>
+</div>
+</body>
+</html>

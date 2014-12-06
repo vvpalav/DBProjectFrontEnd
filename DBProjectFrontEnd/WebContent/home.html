@@ -8,15 +8,32 @@
    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
    <script src="script.js"></script>
    <title>Homepage</title>
+   <style type="text/css">
+   
+		#searchKey {
+			margin-top: 13px;
+			margin-left: 330px;
+			padding: 2px 0px 2px 8px;
+			width : 300px;
+		}
+		
+		#searchbutton {
+			margin-top: 13px;
+			margin-left: 10px;
+			width : 80px;
+			padding: 2px 0px 2px 0px;
+			text-align:center;
+		}
+
+</style>
    <script type="text/javascript">
    
    var user = (window.location.search.replace("?", "").split("=")[1]);
    
    function initialize(){
+	   document.getElementById("p1").innerHTML = "Hello "+user +" !";
 	   document.getElementById("link").src = "Artist_followed.html?user="+user;
-	   document.getElementById("link2").src = "all_options.html?user="+user;
-	   //alert("hello");
-	   document.getElementById("p1").innerHTML = "New text!";
+	   document.getElementById("link2").src = "genres_liked.html?user="+user;
    }
 	function search()
 	{
@@ -31,46 +48,36 @@
 	{
 		window.location = "Artist_followed.html?user="+user;
 	}
+	function signoutfunction()
+	{
+		window.location = "index.html";
+	}
+	function genrelink()
+	{
+		window.location= "genres_liked.html";
+	}
 </script>
 </head>
 <body onload="initialize()">
-
 <div id='cssmenu'>
-<ul>
-   <li><a href='#'><span>Home</span></a></li>
-   <li class='active has-sub'><a href='#'><span>Products</span></a>
-      <ul>
-         <li class='has-sub'><a href='#'><span>Product 1</span></a>
-            <ul>
-               <li><a href='#'><span>Sub Product</span></a></li>
-               <li class='last'><a href='#'><span>Sub Product</span></a></li>
-            </ul>
-         </li>
-         <li class='has-sub'><a href='#'><span>Product 2</span></a>
-            <ul>
-               <li><a href='#'><span>Sub Product</span></a></li>
-               <li class='last'><a href='#'><span>Sub Product</span></a></li>
-            </ul>
-         </li>
-      </ul>
-   </li>
-   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
-   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
-</ul>
+	<ul>
+	   <li><a href='#'><span>Home</span></a></li>
+	   <li><a id="artistlink" href="#" onclick="genrelink();"><span>Genres Liked</span></a></li>
+	   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
+	   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
+	   <li><a id="updatelink" href="#" onclick="signoutfunction();"><span><span>Sign Out</span></span></a></li>
+	   <li><input type="text" placeholder="Search for upcoming events" required id="searchKey"></li>
+	   <li><input type="button" value="Search" id = "searchbutton" onclick = search()></li>
+	</ul>
 </div>
- <div id= "searchbar">
-  <form>
-              <input type="text" placeholder="Search for upcoming events" required id="searchKey">
-              <input type="button" value="Search" id = "searchbutton" onclick = search()>
-                                
-</form>
+<div id= "usertext">
+<p id="p1">Hello User!</p>
 </div>
-<p id="p1">Hello World!</p>
 <div id="frameone">
 <iframe id="link" width="400" height="300" seamless></iframe>
 </div>
 <div id="frametwo" >
-<iframe src="link2" width="400" height="300" seamless ></iframe>
+<iframe id="link2" width="400" height="300" seamless></iframe>
 </div>
 <div id="content_for_user">
 <p>These are the upcoming concerts</p>

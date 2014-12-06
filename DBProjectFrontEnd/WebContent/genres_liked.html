@@ -28,10 +28,10 @@
 	 var result = (json["data"]);
 	 document.write(json["data"]);
   }
-  function addmoreartists()
+  function addmoregenres()
   {
-	  alert("more artists called");
-	  top.window.location = "addmoreartist.html?user="+user;
+	  alert("more genres called");
+	  top.window.location = "addgenres.html?user="+user;
   }
 
 </script>
@@ -41,14 +41,14 @@
 </head>
 <body onload="loadArtistList()">
 <div id= "artistlist">
-<p> These are the artists you follow</p>
+<p> These are the genres you like</p>
 <ul class="navigation">
     <li><a id = "firstartist" href="javascript:window.location=createDynamicURL();"  > Artist info </a></li>
     <li><a href="bedbath.html">Bed &amp; Bath</a></li>
     <li><a href="dining.html">Fine Dining</a></li>
     <li><a href="lighting.html">Lighting</a></li>
     <li><a href="storage.html">Storage</a><li>
-    <li><a id="addmoreartist" href="#" onclick="addmoreartists();"> Add more artists </a></li>
+    <li><a id="addmoreartist" href="#" onclick="addmoregenres();"> Add more genres </a></li>
 </ul> 
 </div>
 
