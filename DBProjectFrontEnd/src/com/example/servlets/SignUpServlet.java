@@ -15,6 +15,7 @@ import com.example.helpers.json.org.json.JSONObject;
 
 public class SignUpServlet extends HttpServlet {
 
+	private DBHelper db;
 	private static final long serialVersionUID = -6860196849677820488L;
 	Logger log = Logger.getLogger(SignUpServlet.class.getName());
 	
@@ -27,7 +28,7 @@ public class SignUpServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		DBHelper db = DBHelper.getDBInstance();
+		db = DBHelper.getDBInstance();
 		JSONObject out = new JSONObject();
 		try {
 			JSONObject json = new JSONObject(req.getParameter("json"));

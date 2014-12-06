@@ -15,6 +15,7 @@ import com.example.helpers.json.org.json.JSONObject;
 
 public class LoginServlet extends HttpServlet {
 
+	private DBHelper db;
 	private static final long serialVersionUID = 4619902785789413521L;
 	Logger log = Logger.getLogger(LoginServlet.class.getName());
 
@@ -34,8 +35,11 @@ public class LoginServlet extends HttpServlet {
 			String username = input.getString("username");
 			String password = input.getString("password");
 			System.out.println("Received request to validate user: " + username);
-			DBHelper db = DBHelper.getDBInstance();
-			if (db.authenticateUser(username, password)) {
+			db = DBHelper.getDBInstance();
+			if (input.getString("type").equals("user") && db.authenticateUser(username, password)) {
+				json.put("status", "success");
+				System.out.println(username + " validated successfully");
+			} else if (input.getString("type").equals("artist") && db.authenticateArtist(username, password)) {
 				json.put("status", "success");
 				System.out.println(username + " validated successfully");
 			}
