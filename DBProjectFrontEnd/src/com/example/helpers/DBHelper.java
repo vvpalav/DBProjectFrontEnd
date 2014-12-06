@@ -37,8 +37,12 @@ public class DBHelper {
 	}
 	
 	public static synchronized DBHelper getDBInstance(){
-		if(db == null){
-			db = new DBHelper();
+		try {
+			if(db == null || (db != null && db.conn.isClosed())){
+				db = new DBHelper();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return db;
 	}
