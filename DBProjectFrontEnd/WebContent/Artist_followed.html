@@ -4,10 +4,12 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Artists Followed </title>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
 
   var user = (window.location.search.replace("?", "").split("=")[1]);
   var json;
+  var activeArtist;
   function loadArtistList(){
 	  var jsonString = '{ "username": "' + user + '", "type": "fetchArtistListForUser" }';
 	  xmlhttp = new XMLHttpRequest();
@@ -15,25 +17,35 @@
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				json = JSON.parse(xmlhttp.responseText);
-				var artist = (json["data"]);
+				createDynamicURL();
 			} 
 		};
-		document.write(json["data"]);
+		//document.write(json["data"]);
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json="+jsonString);
 		
   }
   function createDynamicURL()
   {
-	 var result = (json["data"]);
-	 document.write(json["data"]);
+	var myVar = json.data;
+	var str = "";
+	str = '<p> These are the artists you follow</p>'
+	str = str + ' <ul class="navigation"> '
+	for(var i = 0; i < myVar.length; i++){
+		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_blank">' + myVar[i] + '</a> </li> ';
+	}
+	str = str + ' </ul> ';
+	$("#artistlist").html(str);
   }
-  function addmoreartists()
-  {
+  
+  function someFunc(){
+	  alert("here");
+  }
+  
+  function addmoreartists() {
 	  alert("more artists called");
 	  top.window.location = "addmoreartist.html?user="+user;
   }
-
 </script>
 <link rel="stylesheet" href="css/styles.css">
 <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
@@ -41,17 +53,6 @@
 </head>
 <body onload="loadArtistList()">
 <div id= "artistlist">
-<p> These are the artists you follow</p>
-<ul class="navigation">
-    <li><a id = "firstartist" href="javascript:window.location=createDynamicURL();"  > Artist info </a></li>
-    <li><a href="bedbath.html">Bed &amp; Bath</a></li>
-    <li><a href="dining.html">Fine Dining</a></li>
-    <li><a href="lighting.html">Lighting</a></li>
-    <li><a href="storage.html">Storage</a><li>
-    <li><a id="addmoreartist" href="#" onclick="addmoreartists();"> Add more artists </a></li>
-</ul> 
-</div>
-
-    
+</div>  
 </body>
 </html>

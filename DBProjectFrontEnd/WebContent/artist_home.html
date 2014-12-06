@@ -17,8 +17,7 @@
 <script>
 
 	var aname = window.location.search.replace("?", "").split("=")[1];
-	aname = "Avicii";
-	
+	alert(aname);
 	function fetchArtistInfoAndConcertList(){
 		var jsonStr = '{ "aname" : "' + aname + '", "type" : "fetchArtistInfoAndConcertList" }'
 		xmlhttp = new XMLHttpRequest();
