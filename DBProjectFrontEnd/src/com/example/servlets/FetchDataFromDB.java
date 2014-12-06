@@ -14,7 +14,7 @@ import com.example.helpers.json.org.json.JSONObject;
 
 public class FetchDataFromDB extends HttpServlet{
 
-	DBHelper db = DBHelper.getDBInstance();
+	private DBHelper db = DBHelper.getDBInstance();
 	private static final long serialVersionUID = -128525419621759266L;
 	
 	@Override
