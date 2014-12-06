@@ -41,6 +41,23 @@ public class DBHelper {
 		return db;
 	}
 	
+	public boolean authenticateArtist(String username, String password){
+		String sql = "select count(*) from artist_info where aid = ? and password = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			stmt.setString(2, password);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			int count = rs.getInt(1);
+			if(count > 0)
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public boolean authenticateUser(String username, String password){
 		String sql = "select count(*) from user_info where uid = ? and password = ?";
 		try {

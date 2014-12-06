@@ -9,7 +9,7 @@
 	function validateUser() {
 		var user = document.getElementById('username').value;
 		var pass = document.getElementById('password').value;
-	    var jsonString = '{"username": ' + user + ', "password": ' + pass +"}";
+	    var jsonString = '{ "username": ' + user + ', "password": ' + pass + ', "type": ' + getType() + '}';
 		if (user.length > 0 && pass.length > 0) {
 			xmlhttp = new XMLHttpRequest();
 			xmlhttp.open("POST", "LoginServlet", true);
@@ -17,6 +17,7 @@
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var json = JSON.parse(xmlhttp.responseText);
 					if(json.status == "success"){
+						window.location = "sign_up.html?user="+user;
 						alert("login successful");
 					} else if (json.status == "failure"){
 						alert("Failed to Login");
@@ -30,18 +31,20 @@
 		}
 	}
 
-	
-	function signUp() {
+	function getType(){
 		var radios = document.getElementsByName('type');
 		for (var i = 0; i < radios.length; i++) {
 			if (radios[i].checked) {
-				if (radios[i].value == "user") {
-					window.location = "sign_up.html";
-				} else if (radios[i].value == "artist"){
-					window.location = "artist_sign_up.html";
-				}
-				break;
+				return radios[i].value;
 			}
+		}
+	}
+	
+	function signUp() {
+		if (getType() == "user") {
+			window.location = "sign_up.html";
+		} else {
+			window.location = "artist_sign_up.html";
 		}
 	}
 		</script>
