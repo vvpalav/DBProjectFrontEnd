@@ -22,7 +22,17 @@ body{
   margin: 0px auto;
 }
 
-h1{
+#artistInfo{
+	text-align:center;
+	margin-top:10px;
+	border:1px solid rgba(238,238,238,1);
+	border-radius:5px;
+}
+#concertsList{
+	width: 95%;
+	margin: 0px auto;
+}
+h1, h2{
   text-align:center;
   padding:30px 0px 0px 0px;
   font:30px Oswald;
@@ -30,6 +40,11 @@ h1{
   text-transform:uppercase;
   text-shadow:#000 0px 1px 5px;
   margin:0px;
+}
+
+h2{
+  margin-top: 5px;
+  font:20px Oswald;
 }
 
 p{
