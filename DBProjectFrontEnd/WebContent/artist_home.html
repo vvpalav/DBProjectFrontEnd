@@ -17,8 +17,9 @@
 <script>
 
 	var aname = window.location.search.replace("?", "").split("=")[1];
-	alert(aname);
+	
 	function fetchArtistInfoAndConcertList(){
+		var aname = window.location.search.replace("?", "").split("=")[1];
 		var jsonStr = '{ "aname" : "' + aname + '", "type" : "fetchArtistInfoAndConcertList" }'
 		xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
@@ -90,10 +91,10 @@ label{
 </head>
 <body onload="fetchArtistInfoAndConcertList()">
 	<div id="artistInfo">
-	 <h1 id="name">Artist Name</h1><p/>
-	 <label id="webpage">Web page</label><br>
-	 <label id="company">Company</label><br>
-	 <label id="skills">Skills</label><br>
+	 <h1 id="name"></h1><p/>
+	 <label id="webpage"></label><br>
+	 <label id="company"></label><br>
+	 <label id="skills"></label><br>
 	</div>
 	<div id="concertsList">
 	<h2>Concert List</h2><p/>

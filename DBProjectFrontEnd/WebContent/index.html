@@ -18,7 +18,6 @@
 					var json = JSON.parse(xmlhttp.responseText);
 					if(json.status == "success"){
 						window.location = "home.html?user="+user;
-						alert("login successful");
 					} else if (json.status == "failure"){
 						alert("Failed to Login");
 					}
