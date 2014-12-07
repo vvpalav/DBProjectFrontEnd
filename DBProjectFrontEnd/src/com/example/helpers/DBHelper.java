@@ -243,5 +243,16 @@ public class DBHelper {
 
 		return array;
 	}
+	
+	public String getArtistName(String aid){
+		String sql = "select aname from artist_info";
+		try {
+			ResultSet rs = conn.createStatement().executeQuery("select aname from ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sql;
+	}
 }
 
