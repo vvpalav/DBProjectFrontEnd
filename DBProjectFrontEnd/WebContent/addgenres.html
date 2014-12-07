@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Artists Followed </title>
+  <title>Add more genre </title>
   <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
 
@@ -33,13 +33,13 @@
   {
 	var myVar = json.data;
 	var str = "";
-	str = '<p> These are the artists you follow</p>'
+	str = '<p> Click on genre below to browse and add</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
 		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
-	str = str + '<li> <input type="button" value="Back to homepage" onclick="homelinkaddress()"/>';
 	str = str + ' </ul> ';
+	str = str + '<input type="button" value="Back to homepage" onclick="homelinkaddress()"/>';
 	$("#artistlist").html(str);
   }
   

@@ -29,12 +29,11 @@
   {
 	var myVar = json.data;
 	var str = "";
-	str = '<p> These are the artists you follow</p>'
+	str = '<p> Select One Concert to post a review</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
 		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
-	str = str + '<li> <a href="addmoreartist.html?user='+user+'"target="_parent">Add more Artists</a></li>';
 	str = str + ' </ul> ';
 	$("#artistlist").html(str);
   }
