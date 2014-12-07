@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Create Concert</title>
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<script>
+	var aname = window.location.search.replace("?", "").split("=")[1];
+	aname="Some Artist";
+	
+	var months = [];
+	months.push("January");
+	months.push("February"); 
+	months.push("March"); 
+	months.push("April");
+	months.push("May"); 
+	months.push("June");
+	months.push("July");
+	months.push("August");
+	months.push("September");
+	months.push("October");
+	months.push("November");
+	months.push("December");
+	
+	function insertConcertIntoSystem(){
+		
+	}
+	
+	function initialize(){
+	  if(aname.length > 0){
+		  document.getElementById("aname").value = aname;
+	  }
+	  var mon = document.getElementById("cmonth");
+	  for (var i = 0; i < months.length; i++) {
+	      var optn = document.createElement("OPTION");
+	      optn.text = months[i];
+	      optn.value = months[i];
+	      mon.options.add(optn);
+	    }
+	
+	  var date = document.getElementById("cdate");
+	  for (var i = 1; i < 32; i++) {
+	      var optn = document.createElement("OPTION");
+	      optn.text = i;
+	      optn.value = i;
+	      date.options.add(optn);
+	    }
+	  
+	  var year = document.getElementById("cyear");
+	  for (var i = 2014; i >= 1960; i--) {
+	      var optn = document.createElement("OPTION");
+	      optn.text = i;
+	      optn.value = i;
+	      year.options.add(optn);
+	    }
+	  
+	  var year = document.getElementById("chour");
+	  for (var i = 0; i < 24; i++) {
+	      var optn = document.createElement("OPTION");
+	      optn.text = i;
+	      optn.value = i;
+	      year.options.add(optn);
+	    }
+	  
+	  var year = document.getElementById("cmin");
+	  for (var i = 0; i < 60; i++) {
+	      var optn = document.createElement("OPTION");
+	      optn.text = i;
+	      optn.value = i;
+	      year.options.add(optn);
+	    }
+	}
+</script>
+</head>
+<body onload="initialize()">
+	<div class="wrapper">
+		<h1>Create Concert</h1>
+		<p>Please provide following information to create a concert</p>
+		<input type="text" placeholder="Concert Artist" name="aname" id="aname" style="width:193px;"> 
+		<input type="text" placeholder="Company Name" name="company" id="company" style="width:193px; margin-left: 10px;">
+		
+		<input type="text" placeholder="Concert Name" name="cname" id="cname" style="width:193px;"> 
+		<input type="text" placeholder="Concert Id" name="cid" id="cid" style="width:193px; margin-left: 10px;">
+		
+		<input type="url" placeholder="Web Page" name="page" id="page"> 
+		
+		<input type="text" placeholder="Ticket Price" name="tickets" id="tickets" style="width:115px;"> 
+		<input type="text" placeholder="Capacity" name="capacity" id="capacity" style="width:115px; margin-left:10px;">
+		<input type="text" placeholder="Available Tickets" name="avail" id="avail" style="width:132px; margin-left:10px;">
+		
+		<input type="text" placeholder="Venue Name" name="address" id="address" style="width:193px;">
+		<input type="text" placeholder="Street Name" name="street" id="street" style="width:193px; margin-left:10px;">  
+		
+		<input type="text" placeholder="City" name="city" id="tickecityts" style="width:88px;"> 
+		<input type="text" placeholder="State" name="state" id="state" style="width:88px; margin-left:10px;">
+		<input type="text" placeholder="Zip" name="zip" id="zip" style="width:70px; margin-left:10px;">
+		<input type="text" placeholder="County" name="country" id="country" style="width:92px; margin-left:10px;">
+		
+		<select id="cmonth" name="cmonth" style="width:84px" class="drop">
+			<option>Month</option>
+		</select> 
+		<select id="cdate" name="cdate" style="width:70px; margin-left:10px;" class="drop">
+			<option>Date</option>
+		</select> 
+		<select id="cyear" name="cyear" style="width:70px; margin-left:10px;" class="drop">
+			<option>Year</option>
+		</select>
+		<select id="chour" name="chour" style="width:70px; margin-left:10px;" class="drop">
+			<option>Hour</option>
+		</select>
+		<select id="cmin" name="cmin" style="width:70px; margin-left:10px;" class="drop">
+			<option>Min</option>
+		</select>
+		
+		<input type="submit" onclick="insertConcertIntoSystem()" value="Register">
+	</div>
+</body>
+</html>

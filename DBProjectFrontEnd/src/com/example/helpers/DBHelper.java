@@ -19,9 +19,7 @@ public class DBHelper {
 	
 	public static void main(String[] args) throws JSONException{
 		DBHelper db = DBHelper.getDBInstance();
-		JSONObject object = db.getArtistInfo("Linkinpark");
-		object.put("concertList", db.getConcertListForArtist("Linkinpark"));
-		System.out.println(object);
+		System.out.println(db.getArtistName("artist1"));
 	}
 	
 	private DBHelper(){
@@ -245,14 +243,15 @@ public class DBHelper {
 	}
 	
 	public String getArtistName(String aid){
-		String sql = "select aname from artist_info";
 		try {
-			ResultSet rs = conn.createStatement().executeQuery("select aname from ");
+			ResultSet rs = conn.createStatement()
+					.executeQuery("select aname from artist_info where aid = '"+aid+"'");
+			rs.next();
+			return rs.getString(1);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return sql;
+		return null;
 	}
 }
 

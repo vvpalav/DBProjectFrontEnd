@@ -17,7 +17,10 @@
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var json = JSON.parse(xmlhttp.responseText);
 					if(json.status == "success"){
-						window.location = "home.html?user="+user;
+						if(json.type == "user")
+							window.location = "home.html?user="+user;
+						else if (json.type == "artist")
+							window.location = "artist_home.html?aname="+json.aname;
 					} else if (json.status == "failure"){
 						alert("Failed to Login");
 					}

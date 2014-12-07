@@ -40,9 +40,11 @@ public class LoginServlet extends HttpServlet {
 				json.put("status", "success");
 				System.out.println(username + " validated successfully");
 			} else if (input.getString("type").equals("artist") && db.authenticateArtist(username, password)) {
+				json.put("aname", db.getArtistName(username));
 				json.put("status", "success");
 				System.out.println(username + " validated successfully");
 			}
+			json.put("type", input.getString("type"));
 			PrintWriter print = resp.getWriter();
 			print.write(json.toString());
 			print.flush();
