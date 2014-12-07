@@ -25,20 +25,15 @@
 		xmlhttp.send("json="+jsonString);
 		
   }
-  function homelinkaddress()
-  {
-	  window.location = "home.html?user="+user;
-  }
   function createDynamicURL()
   {
 	var myVar = json.data;
 	var str = "";
-	str = '<p> These are the artists you follow</p>'
+	str = '<p> Select One Concert to post a review</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
 		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
-	str = str + '<li> <input type="button" value="Back to homepage" onclick="homelinkaddress()"/>';
 	str = str + ' </ul> ';
 	$("#artistlist").html(str);
   }

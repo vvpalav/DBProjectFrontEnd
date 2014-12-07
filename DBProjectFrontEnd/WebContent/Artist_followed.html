@@ -34,14 +34,12 @@
 	for(var i = 0; i < myVar.length; i++){
 		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
+	str = str + '<li> <a href="addmoreartist.html?user='+user+'"target="_parent">Add more Artists</a></li>';
 	str = str + ' </ul> ';
 	$("#artistlist").html(str);
   }
   
-  function addmoreartists() {
-	  alert("more artists called");
-	  top.window.location = "addmoreartist.html?user="+user;
-  }
+
   
 </script>
 <link rel="stylesheet" href="css/styles.css">
@@ -49,6 +47,7 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 <body onload="loadArtistList()">
+
 
 <div id= "artistlist">
 </div>  
