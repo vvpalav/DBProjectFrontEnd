@@ -44,4 +44,13 @@
       <url-pattern>/FetchDataFromDB</url-pattern>
   </servlet-mapping>
   
+    <servlet>
+      <servlet-name>CreateConcertServlet</servlet-name>
+      <servlet-class>com.example.servlets.CreateConcertServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+      <servlet-name>CreateConcertServlet</servlet-name>
+      <url-pattern>/CreateConcertServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
