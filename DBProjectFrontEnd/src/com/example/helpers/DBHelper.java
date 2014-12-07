@@ -39,8 +39,9 @@ public class DBHelper {
 		json.put("date", "2014-01-04 02:07:00");
 		
 		DBHelper db = DBHelper.getDBInstance();
-		db.insertSystemConcertIntoDB(json);
-		//System.out.println(db.getArtistName("artist1"));
+		System.out.println(db.getAllArtistList());
+		System.out.println(db.getAllGenreList());
+		System.out.println(db.getGenreListForUser("palavvinayak123"));
 	}
 	
 	private DBHelper(){
@@ -178,6 +179,57 @@ public class DBHelper {
 		return -1;
 	}
 	
+	public JSONObject getGenreListForUser(String username){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select distinct g_desc from main_genre m, users_music_choice u "
+				+ "where m.mgid = u.mgid and u.uid = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	public JSONObject getAllArtistList(){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select distinct aname from artist_info";
+		try {
+			ResultSet rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	public JSONObject getAllGenreList(){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select distinct g_desc from main_genre";
+		try {
+			ResultSet rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
 	public JSONObject getArtistListForUser(String username){
 		JSONObject json = new JSONObject();
 		JSONArray array = new JSONArray();
@@ -232,6 +284,7 @@ public class DBHelper {
 		}
 		return array;
 	}
+	
 	
 	public JSONArray getConcertListForArtist(String aname) {
 		JSONArray array = new JSONArray();

@@ -37,6 +37,12 @@ public class FetchDataFromDB extends HttpServlet{
 				JSONObject object = db.getArtistInfo(aname);
 				object.put("concertList", db.getConcertListForArtist(aname));
 				writeOnResponse(resp, object);
+			} else if (type.equalsIgnoreCase("fetchGenreListForUser")){
+				writeOnResponse(resp, db.getGenreListForUser(json.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchAllArtistList")){
+				writeOnResponse(resp, db.getAllArtistList());
+			} else if (type.equalsIgnoreCase("fetchAllGenreList")){
+				writeOnResponse(resp, db.getAllGenreList());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
