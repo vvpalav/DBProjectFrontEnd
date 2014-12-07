@@ -18,8 +18,29 @@ public class DBHelper {
 	private static DBHelper db;
 	
 	public static void main(String[] args) throws JSONException{
+		JSONObject json = new JSONObject();
+		json.put("concertId", "one more concert");
+		json.put("cname", "new concert name");
+		json.put("aname", "Linkinpark");
+		json.put("company", "Universal Studio");
+		
+		json.put("avail", 100);
+		json.put("price", 50);
+		json.put("capacity", 100);
+		json.put("page", "google.com");
+		
+		json.put("vname", "Ozone park");
+		json.put("street", "77 Street");
+		json.put("state", "NY");
+		json.put("city", "New York");
+		json.put("zip", "11416");
+		json.put("country", "USA");
+		json.put("genre", "Jazz");
+		json.put("date", "2014-01-04 02:07:00");
+		
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getArtistName("artist1"));
+		db.insertSystemConcertIntoDB(json);
+		//System.out.println(db.getArtistName("artist1"));
 	}
 	
 	private DBHelper(){
@@ -242,6 +263,18 @@ public class DBHelper {
 		return array;
 	}
 	
+	public String getArtistId(String name){
+		try {
+			ResultSet rs = conn.createStatement()
+					.executeQuery("select aid from artist_info where aname = '"+name+"'");
+			rs.next();
+			return rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public String getArtistName(String aid){
 		try {
 			ResultSet rs = conn.createStatement()
@@ -253,5 +286,65 @@ public class DBHelper {
 		}
 		return null;
 	}
+	
+	public String getGenreIdByName(String genre){
+		try {
+			ResultSet rs = conn.createStatement()
+					.executeQuery("select mgid from main_genre where g_desc = '"+genre+"'");
+			rs.next();
+			return rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public boolean insertSystemConcertIntoDB(JSONObject json){
+		int vid = insertVenueIntoDB(json);
+		String sql = "insert into system_created_concert_info values "
+				+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setObject(1, json.getString("concertId"));
+		stmt.setObject(2, json.getString("cname"));
+		stmt.setObject(3, vid,  java.sql.Types.VARCHAR);
+		stmt.setObject(4, json.getString("date"), java.sql.Types.TIMESTAMP);
+		stmt.setString(5, getArtistId(json.getString("aname")));
+		stmt.setString(6, getCompanyIdByName(json.getString("company"))+"");
+		stmt.setString(7, json.getString("capacity"));
+		stmt.setString(8, json.getString("avail"));
+		stmt.setString(9, json.getString("price"));
+		stmt.setString(10, json.getString("page"));
+		stmt.setObject(11, new Date(new java.util.Date().getTime()), java.sql.Types.DATE);
+		stmt.setString(12, getGenreIdByName(json.getString("genre")));
+		return (stmt.executeUpdate() > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public int insertVenueIntoDB(JSONObject json){
+		String sql = "select count(*) from venue_info";
+		ResultSet rs;
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			rs.next();
+			int count = rs.getInt(1)+1;
+			sql = "insert into venue_info values (?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setObject(1, count, java.sql.Types.VARCHAR);
+			stmt.setObject(2, json.getString("vname"));
+			stmt.setString(3, json.getString("street"));
+			stmt.setString(4, json.getString("city"));
+			stmt.setString(5, json.getString("state"));
+			stmt.setString(6, json.getString("country"));
+			stmt.setString(7, json.getString("zip"));
+			stmt.executeUpdate();
+			return count;
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 }
-

@@ -8,28 +8,79 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <script>
 	var aname = window.location.search.replace("?", "").split("=")[1];
-	aname="Some Artist";
 	
 	var months = [];
-	months.push("January");
-	months.push("February"); 
-	months.push("March"); 
-	months.push("April");
+	months.push("Jan");
+	months.push("Feb"); 
+	months.push("Mar"); 
+	months.push("Apr");
 	months.push("May"); 
-	months.push("June");
-	months.push("July");
-	months.push("August");
-	months.push("September");
-	months.push("October");
-	months.push("November");
-	months.push("December");
+	months.push("Jun");
+	months.push("Jul");
+	months.push("Aug");
+	months.push("Sep");
+	months.push("Oct");
+	months.push("Nov");
+	months.push("Dec");
 	
 	function insertConcertIntoSystem(){
+		var json = createJSONString();
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "CreateConcertServlet", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var json = JSON.parse(xmlhttp.responseText);
+				if (json.status == "success") {
+					alert("Concert Created Successfully");
+				} else if (json.status == "failure") {
+					alert("Failed to Create Account");
+				}
+			}
+		};
+		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xmlhttp.send("json=" + json);
+	}
+	
+	function createJSONString(){
+		var aname = document.getElementById("aname").value;
+		var company = document.getElementById("company").value;
+		var cname = document.getElementById("cname").value;
+		var cid = document.getElementById("cid").value;
+		var page = document.getElementById("page").value;
+		var price = document.getElementById("price").value;
+		var capacity = document.getElementById("capacity").value;
+		var avail = document.getElementById("avail").value;
+		var vname = document.getElementById("address").value;
+		var street = document.getElementById("street").value;
+		var city = document.getElementById("city").value;
+		var state = document.getElementById("state").value;
+		var zip = document.getElementById("zip").value;
+		var country = document.getElementById("country").value;
+		var cmonth = document.getElementById("cmonth");
+		var cdate = document.getElementById("cdate").value;
+		var cyear = document.getElementById("cyear").value;
+		var chour = document.getElementById("chour").value;
+		var cmin = document.getElementById("cmin").value;
+		var genre = document.getElementById("genre").value;
 		
+		var mon = (cmonth.selectedIndex < 10) ? "0" + (cmonth.selectedIndex) : cmonth.selectedIndex;
+		cdate = (cdate.length == 1) ? "0"+cdate : cdate;
+		chour = (chour.length == 1) ? "0"+chour : chour;
+		cmin = (cmin.length == 1) ? "0"+cmin : cmin;
+		
+		var con_date = cyear + "-" + mon + "-" + cdate + " " + chour + ":" + cmin +":00";
+		alert(con_date);
+		
+		var json = '{ "concertId" : "'+cid+'", "cname" : "'+cname+'", "aname" : "'+aname
+			+'", "company" : "'+company+'", "avail" : "'+avail+'", "price" : "'+price
+			+'", "capacity" : "'+capacity+'", "page" : "'+page+'", "vname" : "'+vname
+			+'", "street" : "'+street+'", "state" : "'+state+'", "zip" : "'+zip+'", "city": "'+city
+			+'", "country" : "'+country+'", "genre" : "'+genre+'", "date" : "'+con_date+'" }';
+		return json;
 	}
 	
 	function initialize(){
-	  if(aname.length > 0){
+	  if(aname != null && aname.length > 0){
 		  document.getElementById("aname").value = aname;
 	  }
 	  var mon = document.getElementById("cmonth");
@@ -84,16 +135,17 @@
 		<input type="text" placeholder="Concert Name" name="cname" id="cname" style="width:193px;"> 
 		<input type="text" placeholder="Concert Id" name="cid" id="cid" style="width:193px; margin-left: 10px;">
 		
-		<input type="url" placeholder="Web Page" name="page" id="page"> 
+		<input type="url" placeholder="Web Page" name="page" id="page" style="width:300px;"> 
+		<input type="text" placeholder="Genre" name="genre" id="genre" style="width:85px; margin-left:10px;">
 		
-		<input type="text" placeholder="Ticket Price" name="tickets" id="tickets" style="width:115px;"> 
+		<input type="text" placeholder="Ticket Price" name="price" id="price" style="width:115px;"> 
 		<input type="text" placeholder="Capacity" name="capacity" id="capacity" style="width:115px; margin-left:10px;">
 		<input type="text" placeholder="Available Tickets" name="avail" id="avail" style="width:132px; margin-left:10px;">
 		
 		<input type="text" placeholder="Venue Name" name="address" id="address" style="width:193px;">
 		<input type="text" placeholder="Street Name" name="street" id="street" style="width:193px; margin-left:10px;">  
 		
-		<input type="text" placeholder="City" name="city" id="tickecityts" style="width:88px;"> 
+		<input type="text" placeholder="City" name="city" id="city" style="width:88px;"> 
 		<input type="text" placeholder="State" name="state" id="state" style="width:88px; margin-left:10px;">
 		<input type="text" placeholder="Zip" name="zip" id="zip" style="width:70px; margin-left:10px;">
 		<input type="text" placeholder="County" name="country" id="country" style="width:92px; margin-left:10px;">
@@ -114,7 +166,7 @@
 			<option>Min</option>
 		</select>
 		
-		<input type="submit" onclick="insertConcertIntoSystem()" value="Register">
+		<input type="submit" onclick="insertConcertIntoSystem()" value="Register" style="width:420px;">
 	</div>
 </body>
 </html>
