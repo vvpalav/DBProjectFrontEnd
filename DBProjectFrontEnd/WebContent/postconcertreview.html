@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Sign Up</title>
+<script type="text/javascript">
+		
+		 var months = [];
+		 months.push("January");
+		 months.push("February"); 
+		 months.push("March"); 
+		 months.push("April");
+		 months.push("May"); 
+		 months.push("June");
+		 months.push("July");
+		 months.push("August");
+		 months.push("September");
+		 months.push("October");
+		 months.push("November");
+		 months.push("December");
+		
+		 function initialize(){
+		   var mon = document.getElementById("bmonth");
+		   for (var i = 0; i < months.length; i++) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = months[i];
+		       optn.value = months[i];
+		       mon.options.add(optn);
+		     }
+		
+		   var date = document.getElementById("bdate");
+		   for (var i = 1; i < 32; i++) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = i;
+		       optn.value = i;
+		       date.options.add(optn);
+		     }
+		   
+		   var year = document.getElementById("byear");
+		   for (var i = 2014; i >= 1960; i--) {
+		       var optn = document.createElement("OPTION");
+		       optn.text = i;
+		       optn.value = i;
+		       year.options.add(optn);
+		     }
+		 }
+		
+		 function insertUserIntoSystem(){
+			if (validateFields() == 1) {
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("POST", "SignUpServlet", true);
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						var json = JSON.parse(xmlhttp.responseText);
+						if (json.status == "success") {
+							alert("Review Succesfully posted");
+							window.location = "index.html";
+						} else if (json.status == "failure") {
+							alert("Failed to post review information");
+						}
+					}
+				};
+				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xmlhttp.send("json=" + createJSON());
+			}
+		}
+		
+		function createJSON() {
+			var concertrating = document.getElementById("concertrating_id").value;
+			var review = document.getElementById("reviewtext").value;
+			var jsonString = '{"concerrating": "' + concertrating
+					+ '", "review": "' + review + '", "type" : "rating"}';
+			return jsonString;
+		}
+		
+		
+</script>
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link href='http://fonts.googleapis.com/css?family=Oswald'
+	rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css'>
+</head>
+<body onload="initialize()">
+	<div class="wrapper">
+		<h1>Update Your Account Information</h1>
+		<p>Please provide following information to update</p>
+		<p id = "concertname"> Concert name - <p>
+		<input type="text" placeholder="Type concert rating here" name="concertrating_id" id="concertrating_id">  
+		<textarea id="reviewtext" rows="4" cols="57" style = "background-color:lightyellow"	></textarea>
+		
+		<input type="submit" onclick="insertUserIntoSystem()" value="Post rating and text">
+	</div>
+</body>
+</html>
