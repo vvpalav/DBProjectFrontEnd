@@ -20,23 +20,21 @@
 				createDynamicURL();
 			} 
 		};
-		//document.write(json["data"]);
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json="+jsonString);
 		
   }
-  function homelinkaddress()
-  {
+  function homelinkaddress() {
 	  window.location = "home.html?user="+user;
   }
-  function createDynamicURL()
-  {
+  
+  function createDynamicURL() {
 	var myVar = json.data;
 	var str = "";
 	str = '<p> Click on genre below to browse and add</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
-		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
+		str = str + ' <li> <a href="genre_home.html?genre='+myVar[i]+'?user='+user+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
 	str = str + ' </ul> ';
 	str = str + '<input type="button" value="Back to homepage" onclick="homelinkaddress()"/>';

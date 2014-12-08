@@ -33,33 +33,45 @@
 	
 	function fetchGenreAndConcertList(){
 		var jsonStr = '{ "genre" : "' + genre + '", "type" : "fetchGenreAndConcertList" }'
-		xmlhttp = new XMLHttpRequest();
+		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				var json = JSON.parse(xmlhttp.responseText);
 				window.document.title = genre + " Home";
 				document.getElementById("name").innerHTML = genre;
-				document.getElementById("company").innerHTML = "Company: " + json.company;
 				updateDataSet(json.concertList);
 			}
 		};
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json=" + jsonStr);
-		
-		var button = document.getElementsByName("dyncamicButton");
-		if(from != null && from.length > 0 && from == "user_home"){
-			button[0].value = "Following";
-		} else if(from != null && from.length > 0 && from == "general_search"){
-			button[0].value = "Follow Genre";
-		}
+		checkIfUserIsFollowingGenre();
+	}
+	
+	function checkIfUserIsFollowingGenre(){
+		var jsonStr = '{ "genre" : "' + genre + '", "type" : "checkIfUserIsFollowingGenre", "username" : "'+ username +'" }'
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "FetchDataFromDB", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var button = document.getElementsByName("dyncamicButton");
+				var json = JSON.parse(xmlhttp.responseText);
+				if(json.status == "success"){
+					button[0].value = "Following";
+				} else if(json.status == "failure"){
+					button[0].value = "Follow Genre";
+				}
+			}
+		};
+		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xmlhttp.send("json=" + jsonStr);
 	}
 	
 	function performAction(){
 		var button = document.getElementsByName("dyncamicButton");
 		if(button[0].value == "Follow Genre"){
 			var jsonStr = '{ "genre" : "' + genre + '", "type" : "followGenreForUser", "username" : "'+username+'" }'
-			xmlhttp = new XMLHttpRequest();
+			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.open("POST", "FetchDataFromDB", true);
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -72,7 +84,6 @@
 					}
 				}
 			};
-			alert(jsonStr);
 			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xmlhttp.send("json=" + jsonStr);
 		}

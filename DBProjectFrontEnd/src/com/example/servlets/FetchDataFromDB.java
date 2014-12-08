@@ -26,46 +26,64 @@ public class FetchDataFromDB extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			JSONObject json = new JSONObject(req.getParameter("json"));
-			System.out.println(json);
-			String type = json.getString("type");
+			JSONObject input = new JSONObject(req.getParameter("json"));
+			String type = input.getString("type");
 			System.out.println("Received data fetch request with type: " + type);
+			System.out.println(input);
 			if(type.equalsIgnoreCase("fetchArtistListForUser")){
-				writeOnResponse(resp, db.getArtistListForUser(json.getString("username")));
+				writeOnResponse(resp, db.getArtistListForUser(input.getString("username")));
 			} else if(type.equalsIgnoreCase("fetchArtistInfoAndConcertList")){
-				String aname = json.getString("aname");
+				String aname = input.getString("aname");
 				JSONObject object = db.getArtistInfo(aname);
 				object.put("concertList", db.getConcertListForArtist(aname));
 				writeOnResponse(resp, object);
 			} else if(type.equalsIgnoreCase("fetchGenreAndConcertList")){
 				JSONObject object = new JSONObject();
-				object.put("concertList", db.getConcertListForGenre(json.getString("genre")));
+				object.put("concertList", db.getConcertListForGenre(input.getString("genre")));
 				writeOnResponse(resp, object);
 			} else if (type.equalsIgnoreCase("fetchGenreListForUser")){
-				writeOnResponse(resp, db.getGenreListForUser(json.getString("username")));
+				writeOnResponse(resp, db.getGenreListForUser(input.getString("username")));
 			} else if (type.equalsIgnoreCase("fetchAllArtistList")){
-				writeOnResponse(resp, db.getAllArtistList());
+				writeOnResponse(resp, db.getAllArtistList(input.getString("username")));
 			} else if (type.equalsIgnoreCase("fetchAllGenreList")){
-				writeOnResponse(resp, db.getAllGenreList());
+				writeOnResponse(resp, db.getAllGenreList(input.getString("username")));
 			} else if (type.equalsIgnoreCase("followArtistForUser") 
-					&& db.insertArtistIntoUserFollowList(json)){
+					&& db.insertArtistIntoUserFollowList(input)){
+				JSONObject json = new JSONObject();
 				json.put("status", "success");
+				writeOnResponse(resp,json);
 			} else if (type.equalsIgnoreCase("followGenreForUser")){
-				String genre = db.getGenreIdByName(json.getString("genre"));
-				String user = json.getString("username");
-				for(String str : db.getAllSubGenreForGenre(genre)){
-					db.insertGenreIntoUserFollowList(user, genre, str);
-				}
-				json.put("status", "success");
-			} else if(type.equalsIgnoreCase("updateuserinformation")){
-				JSONObject newJson = new JSONObject();
+				JSONObject json = new JSONObject();
 				json.put("status", "failure");
-				if (db.updateUserEntryDB(json)) {
-					newJson.put("status", "success");
-					writeOnResponse(resp,newJson);
-				} else {
-					writeOnResponse(resp,newJson);
+				boolean flag = false;
+				String genre = db.getGenreIdByName(input.getString("genre"));
+				String user = input.getString("username");
+				for(String str : db.getAllSubGenreForGenre(genre)){
+					flag = db.insertGenreIntoUserFollowList(user, genre, str);
 				}
+				if(flag) json.put("status", "success");
+				writeOnResponse(resp,json);
+			} else if(type.equalsIgnoreCase("updateuserinformation")){
+				JSONObject json = new JSONObject();
+				json.put("status", "failure");
+				if (db.updateUserEntryDB(input)) {
+					json.put("status", "success");
+				}
+				writeOnResponse(resp,json);
+			} else if (type.equalsIgnoreCase("checkIfUserIsFollowingArtist")){
+				JSONObject newJson = new JSONObject();
+				newJson.put("status", "failure");
+				if(db.checkIfUserIsFollowingArtist(input)){
+					newJson.put("status", "success");
+				}
+				writeOnResponse(resp,newJson);
+			} else if(type.equalsIgnoreCase("checkIfUserIsFollowingGenre")){
+				JSONObject newJson = new JSONObject();
+				newJson.put("status", "failure");
+				if(db.checkIfUserIsFollowingGenre(input)){
+					newJson.put("status", "success");
+				}
+				writeOnResponse(resp,newJson);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

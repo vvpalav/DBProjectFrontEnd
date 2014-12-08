@@ -11,7 +11,7 @@
   var json;
   var activeArtist;
   function loadArtistList(){
-	  var jsonString = '{ "username": "' + user + '", "type": "fetchAllArtistList" }';
+	  var jsonString = '{ "username": "' + user + '", "type": "fetchAllArtistList"}';
 	  xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
@@ -22,28 +22,25 @@
 		};
 		//document.write(json["data"]);
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xmlhttp.send("json="+jsonString);
-		
+		xmlhttp.send("json="+jsonString);	
   }
-  function homelinkaddress()
-  {
+  
+  function homelinkaddress() {
 	  window.location = "home.html?user="+user;
   }
-  function createDynamicURL()
-  {
+  
+  function createDynamicURL() {
 	var myVar = json.data;
 	var str = "";
 	str = '<p> Select artist from below to browse and follow</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
-		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
+		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'?user='+user+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
 	str = str + '<li> <input type="button" value="Back to homepage" onclick="homelinkaddress()"/>';
 	str = str + ' </ul> ';
 	$("#artistlist").html(str);
   }
-  
-
   
 </script>
 <link rel="stylesheet" href="css/styles.css">

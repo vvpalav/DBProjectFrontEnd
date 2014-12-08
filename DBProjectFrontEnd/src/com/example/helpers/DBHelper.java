@@ -40,9 +40,7 @@ public class DBHelper {
 		json.put("date", "2014-01-04 02:07:00");
 		
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getAllArtistList());
-		System.out.println(db.getAllGenreList());
-		System.out.println(db.getGenreListForUser("palavvinayak123"));
+		System.out.println(db.getConcertListForGenre("Jazz"));
 	}
 	
 	private DBHelper(){
@@ -199,12 +197,15 @@ public class DBHelper {
 		return json;
 	}
 	
-	public JSONObject getAllArtistList(){
+	public JSONObject getAllArtistList(String username){
 		JSONObject json = new JSONObject();
 		JSONArray array = new JSONArray();
-		String sql = "select distinct aname from artist_info";
+		String sql = "select distinct aname from artist_info where aid not in (select following_aid from "
+				+ " user_to_artist_follow where my_uid = ?)";
 		try {
-			ResultSet rs = conn.createStatement().executeQuery(sql);
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()){
 				array.put(rs.getString(1));
 			}
@@ -215,12 +216,15 @@ public class DBHelper {
 		return json;
 	}
 	
-	public JSONObject getAllGenreList(){
+	public JSONObject getAllGenreList(String username){
 		JSONObject json = new JSONObject();
 		JSONArray array = new JSONArray();
-		String sql = "select distinct g_desc from main_genre";
+		String sql = "select distinct g_desc from main_genre where mgid not in "
+				+ "(select mgid from users_music_choice where uid = ?)";
 		try {
-			ResultSet rs = conn.createStatement().executeQuery(sql);
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()){
 				array.put(rs.getString(1));
 			}
@@ -495,6 +499,41 @@ public class DBHelper {
 		} catch (SQLException | JSONException e) {
 			e.printStackTrace();
 		}
+		return false;
+	}
+	
+	public boolean checkIfUserIsFollowingGenre(JSONObject json){
+		String sql = "select count(*) from users_music_choice where uid = ? and mgid = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, getGenreIdByName(json.getString("genre")));
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return (rs.getInt(1) > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public boolean checkIfUserIsFollowingArtist(JSONObject json){
+		String sql = "select count(*) from user_to_artist_follow where my_uid = ?"
+				+ " and following_aid = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, getArtistId(json.getString("aname")));
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return (rs.getInt(1) > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 }
