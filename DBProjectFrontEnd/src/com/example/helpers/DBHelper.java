@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.example.helpers.json.org.json.JSONArray;
 import com.example.helpers.json.org.json.JSONException;
@@ -446,6 +447,37 @@ public class DBHelper {
 			System.out.println(sql);
 			System.out.println("Prepared Statement failed:"+json.getString("username"));
 			System.out.println("Failed to insert user into DB");
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getAllSubGenreForGenre(String mgid){
+		ArrayList<String> list = new ArrayList<String>();
+		String sql = "select distinct sgid from sub_genre where mgid = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, mgid);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				list.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public boolean insertGenreIntoUserFollowList(String uid, String mgid, String sgid) {
+		String sql = "insert into users_music_choice values (?, ?, ?)";
+		PreparedStatement stmt;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, uid);
+			stmt.setString(2, mgid);
+			stmt.setString(3, sgid);
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
