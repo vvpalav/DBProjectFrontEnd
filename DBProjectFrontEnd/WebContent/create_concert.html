@@ -9,6 +9,10 @@
 <script>
 	var aname = window.location.search.replace("?", "").split("=")[1];
 	
+	if(aname != null && anamae.length > 0){
+		document.getElementById("aname").value = aname;
+	}
+	
 	var months = [];
 	months.push("Jan");
 	months.push("Feb"); 

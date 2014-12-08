@@ -16,10 +16,23 @@
 
 <script>
 
-	var aname = window.location.search.replace("?", "").split("=")[1];
+	var array = window.location.search.replace("?", "").split("?");
+	var aname = "", from = "";
+	
+	for (var i = 0; i < array.length; i++){
+		if(array[i] != null && array[i].length > 0){
+			if(array[i].indexOf("aname") >= 0){
+				aname = array[i].split("=")[1];
+			} else if (array[i].indexOf("from") >= 0){
+				from = array[i].split("=")[1];
+			}
+		}
+	}
+	
+	
 	
 	function fetchArtistInfoAndConcertList(){
-		var aname = window.location.search.replace("?", "").split("=")[1];
+		
 		var jsonStr = '{ "aname" : "' + aname + '", "type" : "fetchArtistInfoAndConcertList" }'
 		xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
@@ -48,6 +61,33 @@
 		};
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json=" + jsonStr);
+		
+		var button = document.getElementsByName("dyncamicButton");
+		if(from != null && from.length > 0 && from == "login"){
+			button[0].value = "Create New Concert";
+		} else if(from != null && from.length > 0 && from == "user_home"){
+			button[0].value = "Following";
+		} else if(from != null && from.length > 0 && from == "general_search"){
+			button[0].value = "Follow Artist";
+		}
+	}
+	
+	function performAction(){
+		var button = document.getElementsByName("dyncamicButton");
+		if(button[0].value == "Create New Concert"){
+			window.location = "create_concert.html?aname="+aname;
+		} else if(button[0].value == "Follow Artist"){
+			var jsonStr = '{ "aname" : "' + aname + '", "type" : "followArtistForUser", "username" : "'+username+'" }'
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("POST", "FetchDataFromDB", true);
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var json = JSON.parse(xmlhttp.responseText);
+				}
+			};
+			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xmlhttp.send("json=" + jsonStr);
+		}
 	}
 	
 	function updateDataSet(myVar){
@@ -65,6 +105,7 @@
 			ll.push(json.venue);
 			dataSet.push(ll);
 		}
+		
 		$('#example').dataTable( {
             "data": dataSet,
             "columns": [
@@ -79,10 +120,6 @@
             ]
         } );   	
 	}
-	function homescreen()
-	{
-		window.location="home.html";
-	}
 
 </script>
 <style type="text/css">
@@ -94,17 +131,20 @@ label{
 </style>
 </head>
 <body onload="fetchArtistInfoAndConcertList()">
-	<div id="artistInfo">
-	 <h1 id="name"></h1><p/>
-	 <label id="webpage"></label><br>
-	 <label id="company"></label><br>
-	 <label id="skills"></label><br>
+  <div>
+	<div id="artistInfo" style="width:99%; position: absolute; text-align:center;">
+		 <h1 id="name">Some artist</h1><p/>
+		 <label id="webpage">google.com</label><br>
+		 <label id="company">Company</label><br>
+		 <label id="skills">Jazz, Pop</label>
 	</div>
-	<div id="concertsList">
-	<h2>Concert List</h2><p/>
-	<table class="display" id="example"></table>
-	</div>
-	<div id="dynamicButtons">
+	<div style="position: absolute; width:250px; right: 10px; margin-top:70px;">
+	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="Some">
+	 </div>
+  </div>
+	<div id="concertsList" style="position: absolute; margin-top : 170px; text-align:center;">
+		<h2>Concert List</h2><p/>
+		<table class="display" id="example"></table>
 	</div>
 </body>
 </html>

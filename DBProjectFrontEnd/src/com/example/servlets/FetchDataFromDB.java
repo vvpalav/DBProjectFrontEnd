@@ -43,6 +43,8 @@ public class FetchDataFromDB extends HttpServlet{
 				writeOnResponse(resp, db.getAllArtistList());
 			} else if (type.equalsIgnoreCase("fetchAllGenreList")){
 				writeOnResponse(resp, db.getAllGenreList());
+			} else if (type.equalsIgnoreCase("followArtistForUser")){
+				
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
