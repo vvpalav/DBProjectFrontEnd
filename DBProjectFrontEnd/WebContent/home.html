@@ -5,8 +5,7 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="stylesheet" href="css/new_style.css">
-   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-   <script src="script.js"></script>
+   <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
    <title>Homepage</title>
    <style type="text/css">
    
@@ -34,89 +33,170 @@
   			text-shadow:#000 0px 1px 5px;
   			border:1px solid #000;
 		}
+		
+		.concertListing{
+			padding-left: 10px;
+			padding-bottom: 10px;
+			color:#EEEEEE;
+  			font:17px Oswald;
+  			border:1px solid rgba(238,238,238,1); 
+  			border-radius:5px; 
+  		}
 
-</style>
+		input[type=button]{
+		  width:10%;
+		  padding:3px;
+		  margin-top: 10px;
+		  border-radius:5px;
+		  @include disable;
+		  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#28D2DE), to(#1A878F));
+		  background-image: -webkit-linear-gradient(#28D2DE 0%, #1A878F 100%);
+		  background-image: -moz-linear-gradient(#28D2DE 0%, #1A878F 100%);
+		  background-image: -o-linear-gradient(#28D2DE 0%, #1A878F 100%);
+		  background-image: linear-gradient(#28D2DE 0%, #1A878F 100%);
+		  font:14px Oswald;
+		  color:#FFF;
+		  text-transform:uppercase;
+		  text-shadow:#000 0px 1px 5px;
+		  border:1px solid #000;
+		  opacity:0.7;
+		  -webkit-box-shadow: 0 8px 6px -6px rgba(0,0,0,0.7);
+		  -moz-box-shadow: 0 8px 6px -6px rgba(0,0,0,0.7);
+		  box-shadow: 0 8px 6px -6px rgba(0,0,0,0.7);
+		  border-top:1px solid rgba(255,255,255,0.8)!important;
+		  -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255,255,255,0.2)));
+		}
+
+	</style>
    <script type="text/javascript">
    
    var user = (window.location.search.replace("?", "").split("=")[1]);
    
-   function initialize(){
+    function initialize() {
 	   document.getElementById("p1").innerHTML = "Hello "+user +" !";
 	   document.getElementById("link").src = "Artist_followed.html?user="+user;
 	   document.getElementById("link2").src = "genres_liked.html?user="+user;
-   }
-	function search()
-	{
+	   fetchConcertList();
+    }
+    
+	function fetchConcertList() {
+    	var jsonStr = '{ "username" : "' + user + '", "type" : "fetchRecommendedConcertList" }';
+    	alert(jsonStr);
+    	var xh = new XMLHttpRequest();
+		xh.open("POST", "FetchDataFromDB", true);
+		xh.onreadystatechange = function() {
+			if (xh.readyState == 4 && xh.status == 200) {
+				var json = JSON.parse(xh.responseText);
+				var myVar = json.data;
+				var html = "";
+				for(var i = 0; i < myVar.length; i++){
+					html = html + generateHTMLForConcertListings(myVar[i]);
+				}
+				alert(html);
+				$("#framethree").html(html);
+			}
+		};
+		xh.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xh.send("json=" + jsonStr);
+    }
+    
+    function generateHTMLForConcertListings(myVar){
+    	return ' <div class="concertListing"> ' +
+			' <h2>Some artist</h2> ' + 
+	 		' <label id="webpage">google.com</label><br> ' +
+	 		' <label id="company">Company</label><br> ' +
+	 		' <label id="skills">Jazz, Pop</label><br> ' +
+	 		' <input type="button" value="RSVP"> ' +
+			' </div> ';
+    }
+    
+    
+    
+	function search() {
 		a = document.getElementById("searchKey").innerHTML;
 		alert("You have searched for "+document.getElementById('searchKey').value);
 	}
-	function updatefunction()
-	{	
+    
+	function updatefunction() {	
 		window.location="update_information.html?user="+user;
 	}
-	function artistfunction()
-	{
+	
+	function artistfunction() {
 		window.location = "Artist_followed.html?user="+user;
 	}
-	function signoutfunction()
-	{
+	
+	function signoutfunction() {
 		window.location = "index.html";
 	}
-	function genrelink()
-	{
+	
+	function genrelink() {
 		window.location= "genres_liked.html?user="+user;
 	}
-	function postconcertlink()
-	{
+	
+	function postconcertlink() {
 		window.location = "viewallconcerts.html?user="+user;
 	}
-	function postbandlink()
-	{
+	
+	function postbandlink() {
 		window.location = "newbandinformation.html?user="+user;
 	}
-	function upcomingconcerts()
-	{
+	
+	function upcomingconcerts() {
 		window.location = "upcomingconcerts.html?user="+user;
 	}
-	function addnewconcert()
-	{
+	
+	function addnewconcert() {
 		window.location = "addnewconcert.html?user="+user;
 	}
 	
 </script>
 </head>
 <body onload="initialize()">
-<div id='cssmenu'>
-
-	<ul>
-	   <li><a href='#'><span>Home</span></a></li>
-	   <li class='has-sub'><a href='#'><span>Post Stuff</span></a>
-            <ul>
-               <li><a id ="postconcertlink"href='#' onclick="postconcertlink();"><span>Post a review about a concert</span></a></li>
-               <li class='last'><a id="postbandlink" href='#' onclick="postbandlink();"><span>Post information about a new band</span></a></li>
-               <li class='last'><a id="postbandlink" href='#' onclick="addnewconcertlink();"><span>Add a new concert to the system</span></a></li>
-            </ul>
-         </li>
-	   <li><a id="artistlink" href="#" onclick="genrelink();"><span>Genres Liked</span></a></li>
-	   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
-	   <li><a id="artistlink" href="#" onclick="upcomingconcerts();"><span>View Upcoming concerts</span></a></li>
-	   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
-	   <li><a id="updatelink" href="#" onclick="signoutfunction();"><span><span>Sign Out</span></span></a></li>
-	   <li><input type="text" placeholder="Search for upcoming events" required id="searchKey"></li>
-	   <li><input type="button" value="Search" id = "searchbutton" onclick = search()></li>
-	</ul>
-</div>
-<div id= "usertext">
-<p id="p1">Hello User!</p>
-</div>
-<div id="frameone">
-<iframe id="link" width="400" height="300" seamless></iframe>
-</div>
-<div id="frametwo" >
-<iframe id="link2" width="400" height="300" seamless></iframe>
-</div>
-<div id="content_for_user">
-<p>These are the upcoming concerts</p>
-</div>
+	<div id='cssmenu'>
+		<ul>
+		   <li><a href='#'><span>Home</span></a></li>
+		   <li class='has-sub'><a href='#'><span>Post Stuff</span></a>
+	            <ul>
+	               <li><a id ="postconcertlink"href='#' onclick="postconcertlink();"><span>Post a review about a concert</span></a></li>
+	               <li class='last'><a id="postbandlink" href='#' onclick="postbandlink();"><span>Post information about a new band</span></a></li>
+	               <li class='last'><a id="postbandlink" href='#' onclick="addnewconcertlink();"><span>Add a new concert to the system</span></a></li>
+	            </ul>
+	         </li>
+		   <li><a id="artistlink" href="#" onclick="genrelink();"><span>Genres Liked</span></a></li>
+		   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
+		   <li><a id="artistlink" href="#" onclick="upcomingconcerts();"><span>View Upcoming concerts</span></a></li>
+		   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
+		   <li><a id="updatelink" href="#" onclick="signoutfunction();"><span><span>Sign Out</span></span></a></li>
+		   <li><input type="text" placeholder="Search for upcoming events" required id="searchKey"></li>
+		   <li><input type="button" value="Search" id = "searchbutton" onclick = search()></li>
+		</ul>
+	</div>
+	<div>
+		<div style="float:left; width:25%; margin-left: 10px;">
+			<div id= "usertext">
+				<h1 id="p1">Hello User!</h1>
+			</div>
+			<div id="frameone">
+				<iframe id="link" width="100%" height="300" seamless></iframe>
+			</div>
+			<div id="frametwo">
+				<iframe id="link2" width="100%" height="300" seamless></iframe>
+			</div>
+		</div>
+		<div style="float:right; width:73%; height: 100%: margin-right:10px; margin-left: 10px;">
+			<div id= "usertext">
+				<h1>Concert List For User</h1>
+			</div>
+			<div id="framethree">
+				<div class="concertListing">
+					<h2>Some artist</h2> 
+			 		<label id="webpage">google.com</label><br>
+			 		<label id="company">Company</label><br>
+			 		<label id="skills">Jazz, Pop</label><br>
+			 		<input type="button" value="RSVP">
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

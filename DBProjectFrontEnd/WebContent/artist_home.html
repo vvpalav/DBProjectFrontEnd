@@ -32,7 +32,7 @@
 	}
 	
 	function fetchArtistInfoAndConcertList(){
-		var jsonStr = '{ "aname" : "' + aname + '", "type" : "fetchArtistInfoAndConcertList" }'
+		var jsonStr = '{ "aname" : "' + aname + '", "type" : "fetchArtistInfoAndConcertList" }';
 		var xh = new XMLHttpRequest();
 		xh.open("POST", "FetchDataFromDB", true);
 		xh.onreadystatechange = function() {
