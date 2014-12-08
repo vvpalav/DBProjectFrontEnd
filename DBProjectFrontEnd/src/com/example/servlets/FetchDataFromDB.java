@@ -43,6 +43,21 @@ public class FetchDataFromDB extends HttpServlet{
 				writeOnResponse(resp, db.getAllArtistList());
 			} else if (type.equalsIgnoreCase("fetchAllGenreList")){
 				writeOnResponse(resp, db.getAllGenreList());
+			} else if(type.equalsIgnoreCase("updateuserinformation")){
+				System.out.println("Function called");
+				JSONObject newJson = new JSONObject();
+				json.put("status", "failure");
+				if(db.updateUserEntryDB(json))
+				{
+					newJson.put("status", "success");
+					System.out.println("New JSON:"+newJson);
+					writeOnResponse(resp,newJson);
+				}
+				else
+				{
+					System.out.println("New Json:"+newJson);
+					writeOnResponse(resp,newJson);
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

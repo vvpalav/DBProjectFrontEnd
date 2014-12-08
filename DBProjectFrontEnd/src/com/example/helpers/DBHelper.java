@@ -400,4 +400,26 @@ public class DBHelper {
 		}
 		return -1;
 	}
+	
+	public boolean updateUserEntryDB(JSONObject json) throws JSONException {
+		String sql = "update user_info set first_name=?, last_name=?, dob=?, email=?,city=? where uid=?;";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("firstname"));
+			stmt.setString(2, json.getString("lastname"));
+			stmt.setDate(3, Date.valueOf(json.getString("dob")));
+			stmt.setString(4, json.getString("email"));
+			stmt.setString(5, json.getString("city"));
+			stmt.setString(6,json.getString("username"));
+			System.out.println("Prepared statement:"+stmt);
+			return (stmt.executeUpdate() > 0);
+		} catch (SQLException | JSONException e) {
+			System.out.println(sql);
+			System.out.println("Prepared Statement failed:"+json.getString("username"));
+			System.out.println("Failed to insert user into DB");
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }
