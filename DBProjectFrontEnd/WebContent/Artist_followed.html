@@ -32,7 +32,7 @@
 	str = '<p> These are the artists you follow</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
-		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'?from=user_home" target="_parent">' + myVar[i] + '</a> </li> ';
+		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'?from=user_home?user='+user+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
 	str = str + '<li> <a href="addmoreartist.html?user='+user+'"target="_parent">Add more Artists</a></li>';
 	str = str + ' </ul> ';

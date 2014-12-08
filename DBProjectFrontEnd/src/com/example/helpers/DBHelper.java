@@ -422,4 +422,18 @@ public class DBHelper {
 		return false;
 	}
 	
+	public boolean insertArtistIntoUserFollowList(JSONObject json){
+		String sql = "insert into user_to_artist_follow values (?, ?, ?)";
+		PreparedStatement stmt;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, getArtistId(json.getString("aname")));
+			stmt.setDate(3, new Date(new java.util.Date().getTime()));
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
