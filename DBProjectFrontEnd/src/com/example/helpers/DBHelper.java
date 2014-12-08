@@ -523,6 +523,23 @@ public class DBHelper {
 		return false;
 	}
 	
+	public boolean checkIfUserRSVPForConcert(JSONObject json){
+		String sql = "select count(*) from user_concert_list where uid = ? and sys_con_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, getGenreIdByName(json.getString("concertId")));
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return (rs.getInt(1) > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	public boolean checkIfUserIsFollowingArtist(JSONObject json){
 		String sql = "select count(*) from user_to_artist_follow where my_uid = ?"
 				+ " and following_aid = ?";
