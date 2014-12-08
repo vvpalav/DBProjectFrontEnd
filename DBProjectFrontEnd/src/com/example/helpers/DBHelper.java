@@ -285,6 +285,35 @@ public class DBHelper {
 		return array;
 	}
 	
+	public JSONArray getConcertListForGenre(String genre) {
+		JSONArray array = new JSONArray();
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, a.aname, "
+				+ " s.capacity, s.price, s.avail_tickets, "
+				+ " concat(v.vname, v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
+				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg "
+				+ " where mg.mgid = s.concert_genre and v.vid = s.vid and a.aid = s.artist and mg.g_desc = ?";	
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, genre);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				JSONObject json = new JSONObject();
+				json.put("concertId", rs.getString(1));
+				json.put("concertName", rs.getString(2));
+				json.put("link", rs.getString(3));
+				json.put("aname", rs.getString(4));
+				json.put("capacity", rs.getString(5));
+				json.put("price", rs.getString(6));
+				json.put("availableTickets", rs.getString(7));
+				json.put("venue", rs.getString(8));
+				array.put(json);
+			}
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+
+		return array;
+	}
 	
 	public JSONArray getConcertListForArtist(String aname) {
 		JSONArray array = new JSONArray();

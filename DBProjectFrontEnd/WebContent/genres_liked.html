@@ -20,7 +20,6 @@
 				createDynamicURL();
 			} 
 		};
-		//document.write(json["data"]);
 		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xmlhttp.send("json="+jsonString);
 		
@@ -32,7 +31,7 @@
 	str = '<p> These are the Genres you like</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
-		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
+		str = str + ' <li> <a href="genre_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
 	str = str + '<li> <a href="addgenres.html?user='+user+'"target="_parent">Add more genres</a></li>';
 	str = str + ' </ul> ';
