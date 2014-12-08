@@ -44,8 +44,8 @@
   		}
 
 		input[type=button]{
-		  width:10%;
-		  padding:3px;
+		  width:20%;
+		  padding:5px;
 		  margin-top: 10px;
 		  border-radius:5px;
 		  @include disable;
@@ -66,6 +66,11 @@
 		  border-top:1px solid rgba(255,255,255,0.8)!important;
 		  -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255,255,255,0.2)));
 		}
+		
+		input[type=button]:hover{
+  			opacity:1;
+  			cursor:pointer;
+		}
 
 	</style>
    <script type="text/javascript">
@@ -76,12 +81,12 @@
 	   document.getElementById("p1").innerHTML = "Hello "+user +" !";
 	   document.getElementById("link").src = "Artist_followed.html?user="+user;
 	   document.getElementById("link2").src = "genres_liked.html?user="+user;
+	   document.getElementById("concerHeading").innerHTML = "Concert List For "+user;
 	   fetchConcertList();
     }
     
 	function fetchConcertList() {
     	var jsonStr = '{ "username" : "' + user + '", "type" : "fetchRecommendedConcertList" }';
-    	alert(jsonStr);
     	var xh = new XMLHttpRequest();
 		xh.open("POST", "FetchDataFromDB", true);
 		xh.onreadystatechange = function() {
@@ -92,7 +97,6 @@
 				for(var i = 0; i < myVar.length; i++){
 					html = html + generateHTMLForConcertListings(myVar[i]);
 				}
-				alert(html);
 				$("#framethree").html(html);
 			}
 		};
@@ -102,15 +106,21 @@
     
     function generateHTMLForConcertListings(myVar){
     	return ' <div class="concertListing"> ' +
-			' <h2>Some artist</h2> ' + 
-	 		' <label id="webpage">google.com</label><br> ' +
-	 		' <label id="company">Company</label><br> ' +
-	 		' <label id="skills">Jazz, Pop</label><br> ' +
-	 		' <input type="button" value="RSVP"> ' +
+    		' <h2>'+myVar.concertName+' In '+myVar.genre+'</h2> ' +
+    		' <label>Concert Id : '+myVar.concertId+'</label><br> ' +
+    		' <label>Concert Time : '+myVar.time.substring(0, 16)+'</label><br> ' +
+	 		' <label>Artist Performing : '+myVar.aname+'</label><br> ' +
+	 		' <label>Price : '+myVar.price+' Available Tickets : '+myVar.availableTickets+' Capacity : '+myVar.capacity+'</label><br> ' +
+	 		' <label>Webpage : '+myVar.link+'</label><br> ' +
+	 		' <label>Venue : '+myVar.venue+'</label><br> ' +
+	 		' <input type="button" onclick="navigateToConcertHome(\''+myVar.aname+'\')" value="Go To Concert Home"> ' +
+	 		' <label style="color:#E5C100; margin-left: 10px;">Tag : '+myVar.tag+'</label>' +
 			' </div> ';
     }
     
-    
+    function navigateToConcertHome(val){
+    	window.location = 'artist_home.html?aname='+val+'?user='+user;
+    }
     
 	function search() {
 		a = document.getElementById("searchKey").innerHTML;
@@ -185,11 +195,11 @@
 		</div>
 		<div style="float:right; width:73%; height: 100%: margin-right:10px; margin-left: 10px;">
 			<div id= "usertext">
-				<h1>Concert List For User</h1>
+				<h1 id="concerHeading">Concert List For User</h1>
 			</div>
 			<div id="framethree">
 				<div class="concertListing">
-					<h2>Some artist</h2> 
+					<h2><a href="http:google.com">Google</a></h2> 
 			 		<label id="webpage">google.com</label><br>
 			 		<label id="company">Company</label><br>
 			 		<label id="skills">Jazz, Pop</label><br>
