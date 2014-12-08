@@ -50,6 +50,13 @@ public class FetchDataFromDB extends HttpServlet{
 			} else if (type.equalsIgnoreCase("followArtistForUser") 
 					&& db.insertArtistIntoUserFollowList(json)){
 				json.put("status", "success");
+			} else if (type.equalsIgnoreCase("followGenreForUser")){
+				String genre = db.getGenreIdByName(json.getString("genre"));
+				String user = json.getString("username");
+				for(String str : db.getAllSubGenreForGenre(genre)){
+					db.insertGenreIntoUserFollowList(user, genre, str);
+				}
+				json.put("status", "success");
 			} else if(type.equalsIgnoreCase("updateuserinformation")){
 				JSONObject newJson = new JSONObject();
 				json.put("status", "failure");
