@@ -68,6 +68,10 @@
 	{
 		window.location = "upcomingconcerts.html?user="+user;
 	}
+	function addnewconcert()
+	{
+		window.location = "addnewconcert.html?user="+user;
+	}
 	
 </script>
 </head>
@@ -80,6 +84,7 @@
             <ul>
                <li><a id ="postconcertlink"href='#' onclick="postconcertlink();"><span>Post a review about a concert</span></a></li>
                <li class='last'><a id="postbandlink" href='#' onclick="postbandlink();"><span>Post information about a new band</span></a></li>
+               <li class='last'><a id="postbandlink" href='#' onclick="addnewconcertlink();"><span>Add a new concert to the system</span></a></li>
             </ul>
          </li>
 	   <li><a id="artistlink" href="#" onclick="genrelink();"><span>Genres Liked</span></a></li>

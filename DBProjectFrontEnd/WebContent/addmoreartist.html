@@ -11,7 +11,7 @@
   var json;
   var activeArtist;
   function loadArtistList(){
-	  var jsonString = '{ "username": "' + user + '", "type": "fetchArtistListForUser" }';
+	  var jsonString = '{ "username": "' + user + '", "type": "fetchAllArtistList" }';
 	  xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
@@ -33,7 +33,7 @@
   {
 	var myVar = json.data;
 	var str = "";
-	str = '<p> These are the artists you follow</p>'
+	str = '<p> Select artist from below to browse and follow</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
 		str = str + ' <li> <a href="artist_home.html?aname='+myVar[i]+'" target="_parent">' + myVar[i] + '</a> </li> ';

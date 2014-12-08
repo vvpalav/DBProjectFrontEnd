@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>User Sign Up</title>
 <script type="text/javascript">
+var user = (window.location.search.replace("?", "").split("=")[1]);
 		
 		 var months = [];
 		 months.push("January");
@@ -48,13 +49,13 @@
 		 function insertUserIntoSystem(){
 			if (validateFields() == 1) {
 				xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("POST", "SignUpServlet", true);
+				xmlhttp.open("POST", "FetchDataFromDB", true);
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 						var json = JSON.parse(xmlhttp.responseText);
 						if (json.status == "success") {
 							alert("Account Information Updated Succesfully");
-							window.location = "index.html";
+							window.location = "home.html?user="+user;
 						} else if (json.status == "failure") {
 							alert("Failed to update account information	");
 						}
@@ -72,15 +73,14 @@
 			var bdate = document.getElementById("bdate").value;
 			var firstname = document.getElementById("firstname").value;
 			var lastname = document.getElementById("lastname").value;
-			//var user = document.getElementById("username").value;
 			var pass = document.getElementById("password").value;
 			var dob = byear + "-" + bmonth.selectedIndex + "-" + bdate;
 			var city = document.getElementById("city").value;
-			var jsonString = '{"password": "' + pass
+			var jsonString = '{"username": "' + user
 					+ '", "firstname": "' + firstname + '", "lastname": "'
 					+ lastname + '", "email": "' + email + '", "dob": "' + dob
-					+ '", "city": "' + city + '", "type" : "user"}';
-			
+					+ '", "city": "' + city + '", "type" : "updateuserinformation"}';
+			alert(jsonString);
 			return jsonString;
 		}
 		
