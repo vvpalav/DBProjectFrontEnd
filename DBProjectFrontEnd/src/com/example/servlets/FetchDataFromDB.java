@@ -95,6 +95,8 @@ public class FetchDataFromDB extends HttpServlet{
 					newJson.put("status", "success");
 				}
 				writeOnResponse(resp,newJson);
+			} else if(type.equalsIgnoreCase("fetchAllConcerts")){
+				writeOnResponse(resp,db.fetchAllConcertsInSystem());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

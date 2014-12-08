@@ -97,8 +97,8 @@
 			ll.push(json.concertId);
 			ll.push(json.concertName);
 			ll.push(json.link);
-			ll.push(json.aname);
-			ll.push(json.capacity);
+			ll.push('<a href="artist_home.html?aname='+json.aname+'?user='+username+'" target="_parent">'+json.aname+'</a>');
+			ll.push(json.time.substring(0, 16));
 			ll.push(json.price);
 			ll.push(json.availableTickets);
 			ll.push(json.venue);
@@ -112,7 +112,7 @@
                 { "width" : "11%", "title": "Concert Name", "class": "center" },
                 { "width" : "15%", "title": "Webpage", "class": "center" },
                 { "width" : "5%", "title": "Artist", "class": "center" },
-                { "width" : "5%", "title": "Capacity", "class": "center" },
+                { "width" : "10%", "title": "Date", "class": "center" },
                 { "width" : "5%", "title": "Price", "class": "center" },
                 { "width" : "10%", "title": "Avail Tickets", "class": "center" },
                 { "title": "Venue"}

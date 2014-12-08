@@ -42,7 +42,7 @@ public class DBHelper {
 		json.put("date", "2014-01-04 02:07:00");
 		
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getRecommendedConcertListForUser("palavvinayak123"));
+		System.out.println(db.fetchAllConcertsInSystem());
 	}
 	
 	private DBHelper(){
@@ -686,6 +686,38 @@ public class DBHelper {
 			stmt.setString(1, username);
 			stmt.setString(2, username);
 			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				JSONObject json = new JSONObject();
+				json.put("concertId", rs.getString(1));
+				json.put("concertName", rs.getString(2));
+				json.put("link", rs.getString(3));
+				json.put("genre", rs.getString(4));
+				json.put("aname", rs.getString(5));
+				json.put("time", rs.getString(6));
+				json.put("capacity", rs.getString(7));
+				json.put("price", rs.getString(8));
+				json.put("availableTickets", rs.getString(9));
+				json.put("venue", rs.getString(10));
+				array.put(json);
+			}
+			out.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return out;
+	}
+	
+	public JSONObject fetchAllConcertsInSystem(){
+		JSONObject out = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, a.aname,  s.sys_con_time, "
+				+ " s.capacity, s.price, s.avail_tickets, "
+				+ " concat(v.vname, ' ', v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
+				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg "
+				+ " where mg.mgid = s.concert_genre and v.vid = s.vid and a.aid = s.artist";
+		try {
+
+			ResultSet rs = conn.createStatement().executeQuery(sql);
 			while(rs.next()){
 				JSONObject json = new JSONObject();
 				json.put("concertId", rs.getString(1));

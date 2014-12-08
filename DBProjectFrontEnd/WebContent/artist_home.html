@@ -100,7 +100,6 @@
 				if (xht.readyState == 4 && xht.status == 200) {
 					var json = JSON.parse(xht.responseText);
 					if(json.status == "success"){
-						alert("Artist followed successfully");
 						button[0].value = "Following";
 					} else {
 						alert("Failed to follow an artist");
@@ -120,8 +119,8 @@
 			ll.push(json.concertId);
 			ll.push(json.concertName);
 			ll.push(json.link);
-			ll.push(json.genre);
-			ll.push(json.capacity);
+			ll.push('<a href="genre_home.html?genre='+json.genre+'?user='+username+'" target="_parent">'+json.genre+'</a>');
+			ll.push(json.time.substring(0, 16));
 			ll.push(json.price);
 			ll.push(json.availableTickets);
 			ll.push(json.venue);
@@ -135,7 +134,7 @@
                 { "width" : "11%", "title": "Concert Name", "class": "center" },
                 { "width" : "15%", "title": "Webpage", "class": "center" },
                 { "width" : "5%", "title": "Genre", "class": "center" },
-                { "width" : "5%", "title": "Capacity", "class": "center" },
+                { "width" : "10%", "title": "Date", "class": "center" },
                 { "width" : "5%", "title": "Price", "class": "center" },
                 { "width" : "10%", "title": "Avail Tickets", "class": "center" },
                 { "title": "Venue"}
