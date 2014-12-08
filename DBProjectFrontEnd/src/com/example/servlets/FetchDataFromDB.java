@@ -2,6 +2,7 @@ package com.example.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -84,6 +85,8 @@ public class FetchDataFromDB extends HttpServlet{
 					newJson.put("status", "success");
 				}
 				writeOnResponse(resp,newJson);
+			} else if(type.equalsIgnoreCase("fetchRecommendedConcertList")){
+				writeOnResponse(resp, db.getRecommendedConcertListForUser(input.getString("username")));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

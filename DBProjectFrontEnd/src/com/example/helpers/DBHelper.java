@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import com.example.helpers.json.org.json.JSONArray;
 import com.example.helpers.json.org.json.JSONException;
@@ -40,7 +42,7 @@ public class DBHelper {
 		json.put("date", "2014-01-04 02:07:00");
 		
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.getConcertListForGenre("Jazz"));
+		System.out.println(db.getConcertListBasedOnArtistsFollowers("palavvinayak123"));
 	}
 	
 	private DBHelper(){
@@ -292,7 +294,7 @@ public class DBHelper {
 	
 	public JSONArray getConcertListForGenre(String genre) {
 		JSONArray array = new JSONArray();
-		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, a.aname, "
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, a.aname, "
 				+ " s.capacity, s.price, s.avail_tickets, "
 				+ " concat(v.vname, v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
 				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg "
@@ -306,11 +308,12 @@ public class DBHelper {
 				json.put("concertId", rs.getString(1));
 				json.put("concertName", rs.getString(2));
 				json.put("link", rs.getString(3));
-				json.put("aname", rs.getString(4));
-				json.put("capacity", rs.getString(5));
-				json.put("price", rs.getString(6));
-				json.put("availableTickets", rs.getString(7));
-				json.put("venue", rs.getString(8));
+				json.put("genre", rs.getString(4));
+				json.put("aname", rs.getString(5));
+				json.put("capacity", rs.getString(6));
+				json.put("price", rs.getString(7));
+				json.put("availableTickets", rs.getString(8));
+				json.put("venue", rs.getString(9));
 				array.put(json);
 			}
 		} catch (SQLException | JSONException e) {
@@ -322,7 +325,7 @@ public class DBHelper {
 	
 	public JSONArray getConcertListForArtist(String aname) {
 		JSONArray array = new JSONArray();
-		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, "
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, a.aname, "
 				+ " s.capacity, s.price, s.avail_tickets, "
 				+ " concat(v.vname, v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
 				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg "
@@ -337,10 +340,11 @@ public class DBHelper {
 				json.put("concertName", rs.getString(2));
 				json.put("link", rs.getString(3));
 				json.put("genre", rs.getString(4));
-				json.put("capacity", rs.getString(5));
-				json.put("price", rs.getString(6));
-				json.put("availableTickets", rs.getString(7));
-				json.put("venue", rs.getString(8));
+				json.put("aname", rs.getString(5));
+				json.put("capacity", rs.getString(6));
+				json.put("price", rs.getString(7));
+				json.put("availableTickets", rs.getString(8));
+				json.put("venue", rs.getString(9));
 				array.put(json);
 			}
 		} catch (SQLException | JSONException e) {
@@ -535,5 +539,144 @@ public class DBHelper {
 		}
 		
 		return false;
+	}
+	
+	public JSONObject getRecommendedConcertListForUser(String username){
+		HashSet<String> set = new HashSet<String>();
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		try {
+			//Concerts based on artist user is following
+			JSONArray artistList = getArtistListForUser(username).getJSONArray("data");
+			for(int i = 0; i < artistList.length(); i++){
+				JSONArray a = getConcertListForArtist(artistList.getString(i));
+				for(int j = 0; j < a.length(); j++){
+					JSONObject t = a.getJSONObject(j);
+					if(!set.contains(t.getString("concertId"))){
+						set.add(t.getString("concertId"));
+						array.put(t);
+					}
+				}
+			}
+			
+			//Concerts based on genre user has liked
+			JSONArray genreList = getGenreListForUser(username).getJSONArray("data");
+			for(int i = 0; i < genreList.length(); i++){
+				JSONArray a = getConcertListForGenre(genreList.getString(i));
+				for(int j = 0; j < a.length(); j++){
+					JSONObject t = a.getJSONObject(j);
+					if(!set.contains(t.getString("concertId"))){
+						set.add(t.getString("concertId"));
+						array.put(t);
+					}
+				}
+			}
+			
+			//Concerts for which user has RSVP'd
+			List<String> list = getConcertIdsForUser(username);
+			for(String str : list){
+				if(!set.contains(str)){
+					set.add(str);
+					array.put(getConcertInfoFromConcertId(str));
+				}
+			}
+			
+			//Concerts recommended by system based on artist and his followers
+			JSONArray conList = getConcertListBasedOnArtistsFollowers(username).getJSONArray("data");
+			for(int i = 0; i < conList.length(); i++){
+				JSONArray a = getConcertListForGenre(conList.getString(i));
+				for(int j = 0; j < a.length(); j++){
+					JSONObject t = a.getJSONObject(j);
+					if(!set.contains(t.getString("concertId"))){
+						set.add(t.getString("concertId"));
+						conList.put(t);
+					}
+				}
+			}
+			
+			json.put("data", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	public List<String> getConcertIdsForUser(String user){
+		ArrayList<String> array = new ArrayList<String>();
+		String sql = "select sys_con_id from user_concert_list where uid = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, user);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				array.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return array;
+	}
+	
+	public JSONObject getConcertInfoFromConcertId(String conId){
+		JSONObject json = new JSONObject();
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, a.aname, "
+				+ " s.capacity, s.price, s.avail_tickets, "
+				+ " concat(v.vname, v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
+				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg "
+				+ " where mg.mgid = s.concert_genre and v.vid = s.vid and a.aid = s.artist and s.sys_con_id = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, conId);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			json.put("concertId", rs.getString(1));
+			json.put("concertName", rs.getString(2));
+			json.put("link", rs.getString(3));
+			json.put("genre", rs.getString(4));
+			json.put("aname", rs.getString(5));
+			json.put("capacity", rs.getString(6));
+			json.put("price", rs.getString(7));
+			json.put("availableTickets", rs.getString(8));
+			json.put("venue", rs.getString(9));
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	public JSONObject getConcertListBasedOnArtistsFollowers(String username){
+		JSONObject out = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select s.sys_con_id, s.sys_con_name, s.hyperlink, mg.g_desc, a.aname, s.capacity, s.price, s.avail_tickets, " 
+				+ " concat(v.vname, v.street, ' ', v.city, ' ', v.state, ' ', v.zip, ' ', v.country) as venue "
+				+ " from system_created_concert_info s, venue_info v, artist_info a, main_genre mg where v.vid = s.vid " 
+				+ " and a.aid = s.artist and s.concert_genre = mg.mgid and s.sys_con_id in " 
+				+ " (select sys_con_id from user_concert_list where uid in (select uid from user_info " 
+				+ " where uid != ? and uid in (select my_uid from user_to_artist_follow where following_aid in "
+				+ " (select following_aid from user_to_artist_follow where my_uid = ?))))";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			stmt.setString(2, username);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				JSONObject json = new JSONObject();
+				json.put("concertId", rs.getString(1));
+				json.put("concertName", rs.getString(2));
+				json.put("link", rs.getString(3));
+				json.put("genre", rs.getString(4));
+				json.put("aname", rs.getString(5));
+				json.put("capacity", rs.getString(6));
+				json.put("price", rs.getString(7));
+				json.put("availableTickets", rs.getString(8));
+				json.put("venue", rs.getString(9));
+				array.put(json);
+			}
+			out.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return out;
 	}
 }
