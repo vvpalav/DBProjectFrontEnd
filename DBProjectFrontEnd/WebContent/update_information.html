@@ -80,7 +80,6 @@ var user = (window.location.search.replace("?", "").split("=")[1]);
 					+ '", "firstname": "' + firstname + '", "lastname": "'
 					+ lastname + '", "email": "' + email + '", "dob": "' + dob
 					+ '", "city": "' + city + '", "type" : "updateuserinformation"}';
-			alert(jsonString);
 			return jsonString;
 		}
 		
@@ -137,13 +136,13 @@ var user = (window.location.search.replace("?", "").split("=")[1]);
 		<input type="password" placeholder="Password" name="password" id="password"> 
 		<input type="email" placeholder="Email" name="email" id="email"> 
 		<input type="text" placeholder="City" name="city" id="city"> 
-		<select id="bmonth" name="bmonth">
+		<select id="bmonth" name="bmonth" class="drop">
 			<option>Birth Month</option>
 		</select> 
-		<select id="bdate" name="bdate">
+		<select id="bdate" name="bdate" class="drop">
 			<option>Birth Date</option>
 		</select> 
-		<select id="byear" name="byear">
+		<select id="byear" name="byear" class="drop">
 			<option>Birth Year</option>
 		</select>
 		<input type="submit" onclick="insertUserIntoSystem()" value="Update">

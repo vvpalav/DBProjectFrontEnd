@@ -64,6 +64,7 @@
 		var button = document.getElementsByName("dyncamicButton");
 		if(from != null && from.length > 0 && from == "login"){
 			button[0].value = "Create New Concert";
+			button[1].parentNode.removeChild(button[1]);
 		} else if(username != null && username.length > 0){
 			checkIfUserIsFollowingArtist();
 		}

@@ -91,7 +91,6 @@ public class FetchDataFromDB extends HttpServlet{
 				JSONObject object = db.getConcertInfoFromConcertId(concertId);
 				object.put("concertComments", db.getConcertCommentsForConcert(concertId));
 				writeOnResponse(resp, object);
-				//writeOnResponse(resp, db.getConcertInfoFromConcertId(input.getString("concertId")));
 			} else if(type.equalsIgnoreCase("checkIfUserRSVPForConcert")){
 				JSONObject newJson = new JSONObject();
 				newJson.put("status", "failure");

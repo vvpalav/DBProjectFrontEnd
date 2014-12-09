@@ -752,6 +752,7 @@ public class DBHelper {
 		}
 		return out;
 	}
+	
 	public JSONArray getConcertCommentsForConcert(String concertId) {
 		JSONArray array = new JSONArray();
 		String sql = "select * from user_comments where sys_con_id=?";	

@@ -6,49 +6,47 @@
 <script type="text/javascript">
 		
 		 
-var array = window.location.search.replace("?", "").split("?");
-var concertid = "", from = "", username = "";
-
-for (var i = 0; i < array.length; i++){
-	if(array[i] != null && array[i].length > 0){
-		if(array[i].indexOf("concertid") >= 0){
-			concertid = array[i].split("=")[1];
-		}  else if (array[i].indexOf("user") >= 0){
-			username = array[i].split("=")[1];
+	var array = window.location.search.replace("?", "").split("?");
+	var concertid = "", from = "", username = "";
+	
+	for (var i = 0; i < array.length; i++){
+		if(array[i] != null && array[i].length > 0){
+			if(array[i].indexOf("concertid") >= 0){
+				concertid = array[i].split("=")[1];
+			}  else if (array[i].indexOf("user") >= 0){
+				username = array[i].split("=")[1];
+			}
 		}
 	}
-}
-		 function initialize(){
-			 alert(username);
-			 alert(concertid);
-			 document.getElementById("concertname").innerHTML = "Concert ID- "+concertid
-		 }
-		 
-		 function homelink(){
-			 window.location="home.html?user="+username;
-		 }
-		
-		 function insertReviewIntoConcert(){
-			 var reviewtextstring = document.getElementById("reviewtext").value;
-			 //alert(reviewtextstring);
-			 var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "postreview","review" : "'+reviewtextstring+'", "username" : "'+username+'" }'
-			 alert(jsonStr);
-			xmlhttp = new XMLHttpRequest();
-			xmlhttp.open("POST", "FetchDataFromDB", true);
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					var json = JSON.parse(xmlhttp.responseText);
-					if (json.status == "success") {
-						alert("Review Succesfully posted");
-						window.location = "concerthome.html?concertid="+concertid+"?user="+username;
-					} else if (json.status == "failure") {
-						alert("Failed to post review information, please try again later");
-					}
-					}
-				};
-				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-				xmlhttp.send("json=" + jsonStr);
-		}	
+	 function initialize(){
+		 document.getElementById("concertname").innerHTML = "Concert ID- "+concertid
+	 }
+	 
+	 function homelink(){
+		 window.location="home.html?user="+username;
+	 }
+	
+	 function insertReviewIntoConcert(){
+		 var reviewtextstring = document.getElementById("reviewtext").value;
+		 //alert(reviewtextstring);
+		 var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "postreview","review" : "'+reviewtextstring+'", "username" : "'+username+'" }'
+		 alert(jsonStr);
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "FetchDataFromDB", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var json = JSON.parse(xmlhttp.responseText);
+				if (json.status == "success") {
+					alert("Review Succesfully posted");
+					window.location = "concerthome.html?concertid="+concertid+"?user="+username;
+				} else if (json.status == "failure") {
+					alert("Failed to post review information, please try again later");
+				}
+				}
+			};
+			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xmlhttp.send("json=" + jsonStr);
+	}	
 		
 </script>
 <link rel="stylesheet" type="text/css" href="css/styles.css">
@@ -63,10 +61,10 @@ for (var i = 0; i < array.length; i++){
 		<p>Please provide following information to post review</p>
 		<p id = "concertname"> Concert name - <p>
 		<input type="text" placeholder="Type concert rating here" name="concertrating_id" id="concertrating_id">  
-		<textarea id="reviewtext" rows="10" cols="57" style = "background-color:lightyellow"	></textarea>
-		
-		<input type="submit" onclick="insertReviewIntoConcert()" value="Post rating and text">
-		<input type="submit" onclick="homelink()" value="Go back to homepage">
+		<textarea id="reviewtext" rows="10" cols="57" style = "background-color:lightyellow; width: 98%"></textarea>
+		<br>
+		<input type="submit" onclick="insertReviewIntoConcert()" value="Post rating and text" style="width:48%">
+		<input type="submit" onclick="homelink()" value="Go back to homepage" style="width:48%; margin-left:12px;">
 	</div>
 </body>
 </html>
