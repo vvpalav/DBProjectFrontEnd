@@ -53,16 +53,15 @@
 		xh.send("json=" + jsonStr);
 		
 		var button = document.getElementsByName("dyncamicButton");
-		if(from != null && from.length > 0 && from == "login"){
-			button[0].value = "Create New Concert";
-			button[1].parentNode.removeChild(button[1]);
-		} else if(username != null && username.length > 0){
+		if(username != null && username.length > 0){
 			checkIfUserIsFollowingArtist();
 		}
 	}
 	
 	function checkIfUserIsFollowingArtist(u){
-		var jsonStr = '{ "aname" : "' + aname + '", "type" : "checkIfUserIsFollowingArtist", "username" : "'+ username +'" }'
+		alert("hi");
+		var jsonStr = '{ "username" : "' + username + '", "type" : "checkIfUserIsFollowingUser", "following_uid" : "'+ followuser +'" }'
+		alert(jsonStr);
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
@@ -72,7 +71,7 @@
 				if(json.status == "success"){
 					button[0].value = "Following";
 				} else if(json.status == "failure"){
-					button[0].value = "Follow Artist";
+					button[0].value = "Follow User";
 				}
 			}
 		};
