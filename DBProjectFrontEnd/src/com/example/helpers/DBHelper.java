@@ -42,7 +42,7 @@ public class DBHelper {
 		json.put("date", "2014-01-04 02:07:00");
 		
 		DBHelper db = DBHelper.getDBInstance();
-		System.out.println(db.fetchAllConcertsInSystem());
+		System.out.println(db.getRecommendedConcertListForUser("vvp221"));
 	}
 	
 	private DBHelper(){
@@ -576,7 +576,7 @@ public class DBHelper {
 	
 	public boolean checkIfUserIsFollowingUser(JSONObject json){
 		String sql = "select count(*) from user_to_user_follow where my_uid = ?"
-				+ " and following_aid = ?";
+				+ " and following_uid = ?";
 		
 		try {
 			PreparedStatement stmt = conn.prepareStatement(sql);
@@ -636,6 +636,17 @@ public class DBHelper {
 				}
 			}
 			
+			//Concerts of users to whome this user following
+			for (String usr : getUserToUserFollowList(username)) {
+				for (String str : getConcertIdsForUser(usr)) {
+					if (!set.contains(str)) {
+						set.add(str);
+						JSONObject t = getConcertInfoFromConcertId(str);
+						t.put("tag", "You are following a user who RSVP'd for this concert");
+						array.put(t);
+					}
+				}
+			}
 			
 			//Concerts recommended by system based on artist and his followers
 			JSONArray conList = getConcertListBasedOnArtistsFollowers(username).getJSONArray("data");
@@ -656,6 +667,22 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	public List<String> getUserToUserFollowList(String user){
+		ArrayList<String> array = new ArrayList<String>();
+		String sql = "select following_uid from user_to_user_follow where my_uid = ?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, user);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				array.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return array;
 	}
 	
 	public List<String> getConcertIdsForUser(String user){
