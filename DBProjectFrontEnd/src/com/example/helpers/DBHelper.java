@@ -531,10 +531,24 @@ public class DBHelper {
 		try {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, json.getString("username"));
-			stmt.setString(2, getGenreIdByName(json.getString("concertId")));
+			stmt.setString(2, json.getString("concertId"));
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			return (rs.getInt(1) > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	public boolean insertUserRSVP(JSONObject json){
+		String sql = "insert into user_concert_list (uid,sys_con_id, attending) values (?, ?,'Yes');";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, json.getString("concertId"));
+			return stmt.executeUpdate() > 0;
 		} catch (SQLException | JSONException e) {
 			e.printStackTrace();
 		}
@@ -737,5 +751,46 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 		return out;
+	}
+	public JSONArray getConcertCommentsForConcert(String concertId) {
+		JSONArray array = new JSONArray();
+		String sql = "select * from user_comments where sys_con_id=?";	
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, concertId);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				JSONObject json = new JSONObject();
+				json.put("post_id", rs.getString(1));
+				json.put("uid", rs.getString(2));
+				json.put("sys_con_id", rs.getString(3));
+				json.put("user_con_id", rs.getString(4));
+				json.put("text", rs.getString(5));
+				json.put("posted_on", rs.getString(6));
+				System.out.println("comments json:"+json);
+				array.put(json);
+			}
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+
+		return array;
+	}
+	public boolean insertUserCommentOnConcert(JSONObject json){
+		String sql = "insert into user_comments (post_id,uid,sys_con_id,text,posted_on) values (?,?,?,?,now());";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("concertId"));
+			stmt.setString(2, json.getString("username"));
+			stmt.setString(3, json.getString("concertId"));
+			stmt.setString(4, json.getString("review"));
+			System.out.println("Statement failed:"+stmt);
+			return stmt.executeUpdate() > 0;
+			
+			} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }

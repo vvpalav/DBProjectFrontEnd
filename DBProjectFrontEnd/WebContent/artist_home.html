@@ -116,7 +116,7 @@
 		for (var i = 0; i < myVar.length; i++){
 			var json = myVar[i];
 			var ll = [];
-			ll.push(json.concertId);
+			ll.push('<a href="concerthome.html?concertid='+json.concertId+'?user='+username+'" target="_parent">'+json.concertId+'</a>');
 			ll.push(json.concertName);
 			ll.push(json.link);
 			ll.push('<a href="genre_home.html?genre='+json.genre+'?user='+username+'" target="_parent">'+json.genre+'</a>');
@@ -141,6 +141,9 @@
             ]
         } );   	
 	}
+	function homepagelink(){
+		window.location = "home.html?user="+username;
+	}
 
 </script>
 <style type="text/css">
@@ -161,6 +164,7 @@ label{
 	</div>
 	<div style="position: absolute; width:250px; right: 10px; margin-top:70px;">
 	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="Follow Artist">
+	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Home">
 	 </div>
   </div>
 	<div id="concertsList" style="position: absolute; margin-top : 170px; text-align:center;">

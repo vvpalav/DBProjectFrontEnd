@@ -23,10 +23,8 @@
 		if(array[i] != null && array[i].length > 0){
 			if(array[i].indexOf("concertid") >= 0){
 				concertid = array[i].split("=")[1];
-				//alert(concertid);
 			}  else if (array[i].indexOf("user") >= 0){
 				username = array[i].split("=")[1];
-				//alert(username);
 			}
 		}
 	}
@@ -54,12 +52,13 @@
 				for(var i = 0; i < skills.length; i++){
 					str = str + " " + skills[i];
 				}
+				updateDataSet(json.concertComments);
 				document.getElementById("genre").innerHTML = "Genre:" + str;
+				document.getElementById("concerttime").innerHTML = "Time:" + json.time;
 				document.getElementById("capacity").innerHTML = "Capacity:" + json.capacity;
 				document.getElementById("venue").innerHTML = "Venue:" + json.venue;
 				document.getElementById("availabletickets").innerHTML = "Available Tickets:" + json.availableTickets;
 				document.getElementById("ticketprices").innerHTML = "Ticket Price:" + json.price;
-				alert(json.capacity)
 				document.getElementById("concertcapacity").innerHTML = "Total Concert Capacity:" + json.capacity;
 			}
 		};
@@ -67,15 +66,14 @@
 		xh.send("json=" + jsonStr);
 		
 		var button = document.getElementsByName("dyncamicButton");
-		if(from != null && from.length > 0 && from == "login"){
-			button[0].value = "Create New Concert";
-		} else if(username != null && username.length > 0){
+		if(username != null && username.length > 0){
+			//alert("Within the function");
 			checkIfUserIsFollowingArtist();
 		}
 	}
 	
-	function checkIfUserIsFollowingArtist(u){
-		var jsonStr = '{ "aname" : "' + aname + '", "type" : "checkIfUserIsFollowingArtist", "username" : "'+ username +'" }'
+	function checkIfUserIsFollowingArtist(){
+		var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "checkIfUserRSVPForConcert", "username" : "'+ username +'" }';
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
@@ -83,9 +81,10 @@
 				var button = document.getElementsByName("dyncamicButton");
 				var json = JSON.parse(xmlhttp.responseText);
 				if(json.status == "success"){
-					button[0].value = "Following";
+					alert("You have already RSVP'ed");
+					button[0].value = "RSVP'ed";
 				} else if(json.status == "failure"){
-					button[0].value = "Follow Artist";
+					alert("Try To RSVP");
 				}
 			}
 		};
@@ -95,58 +94,58 @@
 	
 	function performAction(){
 		var button = document.getElementsByName("dyncamicButton");
-		if(button[0].value == "Create New Concert"){
-			window.location = "create_concert.html?aname="+aname;
-		} else if(button[0].value == "Follow Artist"){
-			var jsonStr = '{ "aname" : "' + aname + '", "type" : "followArtistForUser", "username" : "'+username+'" }'
-			var xht = new XMLHttpRequest();
-			xht.open("POST", "FetchDataFromDB", true);
-			xht.onreadystatechange = function() {
-				if (xht.readyState == 4 && xht.status == 200) {
-					var json = JSON.parse(xht.responseText);
-					if(json.status == "success"){
-						alert("Artist followed successfully");
-						button[0].value = "Following";
-					} else {
-						alert("Failed to follow an artist");
-					}
-				}
+		var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "RSVPtoConcert", "username" : "'+username+'" }'
+		var xht = new XMLHttpRequest();
+		xht.open("POST", "FetchDataFromDB", true);
+		xht.onreadystatechange = function() {
+		if (xht.readyState == 4 && xht.status == 200) {
+			var json = JSON.parse(xht.responseText);
+			if(json.status == "success"){
+				alert("Succesful RSVP");
+				button[0].value = "RSVP'ed";
+			} else {
+				alert("Failed to RSVP");
+				button[0].value = "Try Again later";
+			}
+			}
 			};
 			xht.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xht.send("json=" + jsonStr);
-		}
-	}
+			}
 	
 	function updateDataSet(myVar){
 		var dataSet = [];
 		for (var i = 0; i < myVar.length; i++){
 			var json = myVar[i];
 			var ll = [];
-			ll.push(json.concertId);
-			ll.push(json.concertName);
-			ll.push(json.link);
-			ll.push(json.genre);
-			ll.push(json.capacity);
-			ll.push(json.price);
-			ll.push(json.availableTickets);
-			ll.push(json.venue);
+			ll.push(json.post_id);
+			ll.push(json.uid);
+			ll.push(json.sys_con_id);
+			ll.push(json.user_con_id);
+			ll.push(json.text);
+			ll.push(json.posted_on);
 			dataSet.push(ll);
 		}
-		
 		$('#example').dataTable( {
             "data": dataSet,
             "columns": [
-                { "width" : "10%", "title": "Concert Id", "class": "center" },
-                { "width" : "11%", "title": "Concert Name", "class": "center" },
-                { "width" : "15%", "title": "Webpage", "class": "center" },
-                { "width" : "5%", "title": "Genre", "class": "center" },
-                { "width" : "5%", "title": "Capacity", "class": "center" },
-                { "width" : "5%", "title": "Price", "class": "center" },
-                { "width" : "10%", "title": "Avail Tickets", "class": "center" },
-                { "title": "Venue"}
+                { "width" : "10%", "title": "Concert ID", "class": "center" },
+                { "width" : "11%", "title": "Posted By", "class": "center" },
+                { "width" : "15%", "title": "System ID", "class": "center" },
+                { "width" : "5%", "title": "user_con_id", "class": "center" },
+                { "width" : "5%", "title": "Review", "class": "center" },
+                { "width" : "5%", "title": "Posted On", "class": "center" },
             ]
         } );   	
 	}
+	function addComments(){
+		window.location = "postconcertreview.html?user="+username+"?concertid="+concertid;
+	}
+	
+	function homepagelink(){
+		window.location = "home.html?user="+username;
+	}
+	
 
 </script>
 <style type="text/css">
@@ -164,15 +163,22 @@ label{
 		 <label id="concertlink">google.com</label><br>
 		 <label id="concertid">Company</label><br>
 		 <label id="genre">Jazz, Pop</label><br>
+		 <label id="concerttime">time</label><br>
 		 <label id="capacity"> 100 </label><br>
 		 <label id="venue">Manhattan </label><br>
 		 <label id="availabletickets"> 50</label><br>
 		 <label id="ticketprices">10</label><br>
 		 <label id="concertcapacity">10</label><br>
 	</div>
-	<div style="position: absolute; width:250px; right: 10px; margin-top:70px;">
-	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="Follow Artist">
+	<div style="position: absolute; width:200px; right: 10px; margin-top:70px;">
+	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="RSVP"><br>
+	 	<input onclick="addComments()" type="button" name="dyncamicButton" value="Add Review">
+	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Homepage">
 	 </div>
   </div>
+  <div id="CommentsList" style="position: absolute; margin-top : 280px; text-align:center;">
+		<h2>Comments Posted By Users</h2><p/>
+		<table class="display" id="example"></table>
+	</div>
 </body>
 </html>

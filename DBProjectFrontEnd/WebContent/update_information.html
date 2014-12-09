@@ -116,6 +116,11 @@ var user = (window.location.search.replace("?", "").split("=")[1]);
 			}
 			return 1;
 		}
+		function homepagelink()
+		{
+			window.location = "home.html?user="+user;
+		}
+		
 </script>
 <link rel="stylesheet" type="text/css" href="css/styles.css">
 <link href='http://fonts.googleapis.com/css?family=Oswald'
@@ -141,7 +146,8 @@ var user = (window.location.search.replace("?", "").split("=")[1]);
 		<select id="byear" name="byear">
 			<option>Birth Year</option>
 		</select>
-		<input type="submit" onclick="insertUserIntoSystem()" value="update">
+		<input type="submit" onclick="insertUserIntoSystem()" value="Update">
+		<input type="submit" onclick="homepagelink()" value="Home">
 	</div>
 </body>
 </html>

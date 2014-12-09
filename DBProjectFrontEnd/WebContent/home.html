@@ -88,13 +88,13 @@
 	 		' <label>Price : '+myVar.price+' Available Tickets : '+myVar.availableTickets+' Capacity : '+myVar.capacity+'</label><br> ' +
 	 		' <label>Webpage : '+myVar.link+'</label><br> ' +
 	 		' <label>Venue : '+myVar.venue+'</label><br> ' +
-	 		' <input type="button" onclick="navigateToConcertHome(\''+myVar.aname+'\')" value="Go To Concert Home"> ' +
+	 		' <input type="button" onclick="navigateToConcertHome(\''+myVar.concertId+'\')" value="Go To Concert Home"> ' +
 	 		' <label style="color:#E5C100; margin-left: 10px;">Tag : '+myVar.tag+'</label>' +
 			' </div> ';
     }
     
     function navigateToConcertHome(val){
-    	window.location = 'artist_home.html?aname='+val+'?user='+user;
+    	window.location = 'concerthome.html?concertid='+val+'?user='+user;
     }
     
 	function search() {
@@ -153,7 +153,6 @@
 	         </li>
 		   <li><a id="artistlink" href="#" onclick="genrelink();"><span>Genres Liked</span></a></li>
 		   <li><a id="artistlink" href="#" onclick="artistfunction();"><span>Artists Followed</span></a></li>
-		   <li><a id="artistlink" href="#" onclick="upcomingconcerts();"><span>View Upcoming concerts</span></a></li>
 		   <li><a id="updatelink" href="#" onclick="updatefunction();"><span>Update Your Information</span></a></li>
 		   <li><a id="updatelink" href="#" onclick="allConcerts();"><span>Search All Concerts</span></a></li>
 		   <li><a id="updatelink" href="#" onclick="signoutfunction();"><span><span>Sign Out</span></span></a></li>

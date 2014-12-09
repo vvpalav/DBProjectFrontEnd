@@ -35,7 +35,7 @@
 		for (var i = 0; i < myVar.length; i++){
 			var json = myVar[i];
 			var ll = [];
-			ll.push(json.concertId);
+			ll.push('<a href="concerthome.html?concertid='+json.concertId+'?user='+username+'" target="_parent">'+json.concertId+'</a>');
 			ll.push(json.concertName);
 			ll.push(json.link);
 			ll.push('<a href="artist_home.html?aname='+json.aname+'?user='+username+'" target="_parent">'+json.aname+'</a>');

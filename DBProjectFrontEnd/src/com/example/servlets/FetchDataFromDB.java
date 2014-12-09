@@ -87,7 +87,11 @@ public class FetchDataFromDB extends HttpServlet{
 			} else if(type.equalsIgnoreCase("fetchRecommendedConcertList")){
 				writeOnResponse(resp, db.getRecommendedConcertListForUser(input.getString("username")));
 			} else if (type.equalsIgnoreCase("getConcertInfoFromConcertId")){
-				writeOnResponse(resp, db.getConcertInfoFromConcertId(input.getString("concertId")));
+				String concertId = input.getString("concertId");
+				JSONObject object = db.getConcertInfoFromConcertId(concertId);
+				object.put("concertComments", db.getConcertCommentsForConcert(concertId));
+				writeOnResponse(resp, object);
+				//writeOnResponse(resp, db.getConcertInfoFromConcertId(input.getString("concertId")));
 			} else if(type.equalsIgnoreCase("checkIfUserRSVPForConcert")){
 				JSONObject newJson = new JSONObject();
 				newJson.put("status", "failure");
@@ -97,6 +101,22 @@ public class FetchDataFromDB extends HttpServlet{
 				writeOnResponse(resp,newJson);
 			} else if(type.equalsIgnoreCase("fetchAllConcerts")){
 				writeOnResponse(resp,db.fetchAllConcertsInSystem());
+			}
+			else if(type.equalsIgnoreCase("RSVPtoConcert")){
+				JSONObject json = new JSONObject();
+				json.put("status", "failure");
+				if(db.insertUserRSVP(input)){
+					json.put("status", "success");
+				}
+				writeOnResponse(resp,json);
+			}
+			else if(type.equalsIgnoreCase("postreview")){
+				JSONObject json = new JSONObject();
+				json.put("status", "failure");
+				if(db.insertUserCommentOnConcert(input)){
+					json.put("status", "success");
+				}
+				writeOnResponse(resp,json);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
