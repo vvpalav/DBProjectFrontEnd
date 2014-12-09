@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Artist Home</title>
+
+<!-- Style Sheets -->
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/jqueryui/dataTables.jqueryui.css">
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+
+<!-- Java Script -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/jqueryui/dataTables.jqueryui.js"></script>
+
+<script>
+
+	var array = window.location.search.replace("?", "").split("?");
+	var followuser = "", from = "", username = "";
+	
+	for (var i = 0; i < array.length; i++){
+		if(array[i] != null && array[i].length > 0){
+			if(array[i].indexOf("followuser") >= 0){
+				followuser = array[i].split("=")[1];
+			} else if (array[i].indexOf("from") >= 0){
+				from = array[i].split("=")[1];
+			} else if (array[i].indexOf("user") >= 0){
+				username = array[i].split("=")[1];
+			}
+		}
+	}
+	
+	function fetchArtistInfoAndConcertList(){
+		var jsonStr = '{ "followuser" : "' + followuser + '", "type" : "fetchUserInfo" }';
+		var xh = new XMLHttpRequest();
+		xh.open("POST", "FetchDataFromDB", true);
+		xh.onreadystatechange = function() {
+			if (xh.readyState == 4 && xh.status == 200) {
+				var json = JSON.parse(xh.responseText);
+				window.document.title = json.aname + " Home";
+				document.getElementById("name").innerHTML = json.first_name;
+				document.getElementById("company").innerHTML = "Last Name: " + json.last_name;
+				document.getElementById("webpage").innerHTML = "Date of Birth: "+json.dob;
+				var skills = json.skills;
+				alert(json.email);
+				document.getElementById("skills").innerHTML = "email:" + json.email;
+				document.getElementById("city").innerHTML = "City: " +json.city;
+				//updateDataSet(json.concertList);
+			}
+		};
+		xh.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xh.send("json=" + jsonStr);
+		
+		var button = document.getElementsByName("dyncamicButton");
+		if(from != null && from.length > 0 && from == "login"){
+			button[0].value = "Create New Concert";
+			button[1].parentNode.removeChild(button[1]);
+		} else if(username != null && username.length > 0){
+			checkIfUserIsFollowingArtist();
+		}
+	}
+	
+	function checkIfUserIsFollowingArtist(u){
+		var jsonStr = '{ "aname" : "' + aname + '", "type" : "checkIfUserIsFollowingArtist", "username" : "'+ username +'" }'
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "FetchDataFromDB", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var button = document.getElementsByName("dyncamicButton");
+				var json = JSON.parse(xmlhttp.responseText);
+				if(json.status == "success"){
+					button[0].value = "Following";
+				} else if(json.status == "failure"){
+					button[0].value = "Follow Artist";
+				}
+			}
+		};
+		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xmlhttp.send("json=" + jsonStr);
+	}
+	
+	function performAction(){
+		var button = document.getElementsByName("dyncamicButton");
+			var jsonStr = '{ "userId" : "' + username + '", "type" : "followUser", "username" : "'+followuser+'" }'
+			alert(jsonStr)
+			var xht = new XMLHttpRequest();
+			xht.open("POST", "FetchDataFromDB", true);
+			xht.onreadystatechange = function() {
+				if (xht.readyState == 4 && xht.status == 200) {
+					var json = JSON.parse(xht.responseText);
+					if(json.status == "success"){
+						alert("followed");
+						button[0].value = "Following";
+					} else {
+						alert("Failed to follow an artist");
+					}
+				}
+			};
+			xht.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xht.send("json=" + jsonStr);
+		
+	}
+	
+	function updateDataSet(myVar){
+		var dataSet = [];
+		for (var i = 0; i < myVar.length; i++){
+			var json = myVar[i];
+			var ll = [];
+			ll.push('<a href="concerthome.html?concertid='+json.concertId+'?user='+username+'" target="_parent">'+json.concertId+'</a>');
+			ll.push(json.concertName);
+			ll.push(json.link);
+			ll.push('<a href="genre_home.html?genre='+json.genre+'?user='+username+'" target="_parent">'+json.genre+'</a>');
+			ll.push(json.time.substring(0, 16));
+			ll.push(json.price);
+			ll.push(json.availableTickets);
+			ll.push(json.venue);
+			dataSet.push(ll);
+		}
+		
+		$('#example').dataTable( {
+            "data": dataSet,
+            "columns": [
+                { "width" : "10%", "title": "Concert Id", "class": "center" },
+                { "width" : "11%", "title": "Concert Name", "class": "center" },
+                { "width" : "15%", "title": "Webpage", "class": "center" },
+                { "width" : "5%", "title": "Genre", "class": "center" },
+                { "width" : "10%", "title": "Date", "class": "center" },
+                { "width" : "5%", "title": "Price", "class": "center" },
+                { "width" : "10%", "title": "Avail Tickets", "class": "center" },
+                { "title": "Venue"}
+            ]
+        } );   	
+	}
+	function homepagelink(){
+		window.location = "home.html?user="+username;
+	}
+
+</script>
+<style type="text/css">
+label{
+  text-align:center;
+  color:#EEEEEE;
+  font:17px Oswald;
+}
+</style>
+</head>
+<body onload="fetchArtistInfoAndConcertList()">
+  <div>
+	<div id="artistInfo" style="width:99%; position: absolute; text-align:center;">
+		 <h1 id="name">Some artist</h1><p/>	
+		 <label id="webpage">google.com</label><br>
+		 <label id="company">Company</label><br>
+		 <label id="skills">Jazz, Pop</label><br>
+		 <label id="city">Jazz, Pop</label>
+	</div>
+	<div style="position: absolute; width:250px; right: 10px; margin-top:70px;">
+	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="Follow User">
+	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Home">
+	 </div>
+  </div>
+	<div id="concertsList" style="position: absolute; margin-top : 170px; text-align:center;">
+		<table class="display" id="example"></table>
+	</div>
+</body>
+</html>

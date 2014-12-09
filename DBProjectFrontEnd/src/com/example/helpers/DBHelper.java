@@ -794,4 +794,76 @@ public class DBHelper {
 		
 		return false;
 	}
+	
+	public JSONObject getFollowedUserList(String username){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select * from user_to_user_follow where my_uid = ?;";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	public JSONObject getAllUser(String username){
+		JSONObject json = new JSONObject();
+		JSONArray array = new JSONArray();
+		String sql = "select distinct uid from user_info where uid not in (select following_uid from user_to_user_follow where my_uid=?);";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()){
+				array.put(rs.getString(1));
+			}
+			json.put("data", array);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	public JSONObject getUserInfo(String conId){
+		JSONObject json = new JSONObject();
+		String sql = "select * from user_info where uid=?";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, conId);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			json.put("uid", rs.getString(1));
+			json.put("password", rs.getString(2));
+			json.put("first_name", rs.getString(3));
+			json.put("last_name", rs.getString(4));
+			json.put("dob", rs.getString(5));
+			json.put("email", rs.getString(6));
+			json.put("city", rs.getString(7));
+			System.out.println(json);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	public boolean insertIntoFollow(JSONObject json){
+		String sql = "insert into user_to_user_follow (my_uid, following_uid) values (?,?);";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("userId"));
+			stmt.setString(2, json.getString("username"));
+			System.out.println("Statement failed:"+stmt);
+			return stmt.executeUpdate() > 0;
+			
+			} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 }

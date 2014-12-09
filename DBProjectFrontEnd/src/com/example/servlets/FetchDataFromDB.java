@@ -117,7 +117,26 @@ public class FetchDataFromDB extends HttpServlet{
 				}
 				writeOnResponse(resp,json);
 			}
-		} catch (JSONException e) {
+			else if (type.equalsIgnoreCase("fetchFollowedUserList")){
+				writeOnResponse(resp, db.getFollowedUserList(input.getString("username")));
+			}
+			else if (type.equalsIgnoreCase("fetchAllUserList")){
+				writeOnResponse(resp, db.getAllUser(input.getString("username")));
+			}
+			else if(type.equalsIgnoreCase("fetchUserInfo")){
+				String username = input.getString("followuser");
+				JSONObject object = db.getUserInfo(username);
+				//object.put("concertList", db.getConcertListForArtist(aname));
+				writeOnResponse(resp, object);
+			}
+			else if(type.equalsIgnoreCase("followUser")){
+				JSONObject json = new JSONObject();
+				json.put("status", "failure");
+				if(db.insertIntoFollow(input)){
+					json.put("status", "success");
+				}
+				writeOnResponse(resp,json);
+			}		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
