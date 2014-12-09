@@ -47,19 +47,14 @@
 				}
 				
 				document.getElementById("concertlink").innerHTML = p;
-				var skills = json.genre;
-				var str = "";
-				for(var i = 0; i < skills.length; i++){
-					str = str + " " + skills[i];
-				}
 				updateDataSet(json.concertComments);
-				document.getElementById("genre").innerHTML = "Genre:" + str;
-				document.getElementById("concerttime").innerHTML = "Time:" + json.time;
-				document.getElementById("capacity").innerHTML = "Capacity:" + json.capacity;
-				document.getElementById("venue").innerHTML = "Venue:" + json.venue;
-				document.getElementById("availabletickets").innerHTML = "Available Tickets:" + json.availableTickets;
-				document.getElementById("ticketprices").innerHTML = "Ticket Price:" + json.price;
-				document.getElementById("concertcapacity").innerHTML = "Total Concert Capacity:" + json.capacity;
+				document.getElementById("genre").innerHTML = "Genre: " + json.genre;
+				document.getElementById("concerttime").innerHTML = "Time: " + json.time.substring(0, 15);
+				document.getElementById("capacity").innerHTML = "Capacity: " + json.capacity;
+				document.getElementById("venue").innerHTML = "Venue: " + json.venue;
+				document.getElementById("availabletickets").innerHTML = "Available Tickets: " + json.availableTickets;
+				document.getElementById("ticketprices").innerHTML = "Ticket Price: " + json.price;
+				document.getElementById("concertcapacity").innerHTML = "Total Concert Capacity: " + json.capacity;
 			}
 		};
 		xh.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -112,10 +107,8 @@
 		for (var i = 0; i < myVar.length; i++){
 			var json = myVar[i];
 			var ll = [];
-			ll.push(json.post_id);
-			ll.push(json.uid);
 			ll.push(json.sys_con_id);
-			ll.push(json.user_con_id);
+			ll.push(json.uid);
 			ll.push(json.text);
 			ll.push(json.posted_on);
 			dataSet.push(ll);
@@ -123,12 +116,10 @@
 		$('#example').dataTable( {
             "data": dataSet,
             "columns": [
-                { "width" : "10%", "title": "Concert ID", "class": "center" },
-                { "width" : "11%", "title": "Posted By", "class": "center" },
-                { "width" : "15%", "title": "System ID", "class": "center" },
-                { "width" : "5%", "title": "user_con_id", "class": "center" },
-                { "width" : "5%", "title": "Review", "class": "center" },
-                { "width" : "5%", "title": "Posted On", "class": "center" },
+                { "width" : "20%", "title": "Concert ID", "class": "center" },
+                { "width" : "20%", "title": "Posted By", "class": "center" },
+                { "width" : "40%", "title": "Review", "class": "center" },
+                { "width" : "20%", "title": "Posted On", "class": "center" },
             ]
         } );   	
 	}
@@ -170,7 +161,7 @@ label{
 	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Homepage">
 	 </div>
   </div>
-  <div id="CommentsList" style="position: absolute; margin-top : 280px; text-align:center;">
+  <div id="CommentsList" style="position: absolute; margin-top : 280px; text-align:center; width: 99%">
 		<h2>Comments Posted By Users</h2><p/>
 		<table class="display" id="example"></table>
 	</div>

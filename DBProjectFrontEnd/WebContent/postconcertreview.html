@@ -28,9 +28,8 @@
 	
 	 function insertReviewIntoConcert(){
 		 var reviewtextstring = document.getElementById("reviewtext").value;
-		 //alert(reviewtextstring);
-		 var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "postreview","review" : "'+reviewtextstring+'", "username" : "'+username+'" }'
-		 alert(jsonStr);
+		 var jsonStr = '{ "concertId" : "' + concertid + '", "type" : "postreview","review" : ' +
+			 '"'+reviewtextstring+'", "username" : "'+username+'" }'
 		xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
