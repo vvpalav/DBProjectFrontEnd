@@ -798,13 +798,14 @@ public class DBHelper {
 	public JSONObject getFollowedUserList(String username){
 		JSONObject json = new JSONObject();
 		JSONArray array = new JSONArray();
-		String sql = "select * from user_to_user_follow where my_uid = ?;";
+		String sql = "select following_uid from user_to_user_follow where my_uid = ?;";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()){
 				array.put(rs.getString(1));
+				System.out.println(rs.getString(1));
 			}
 			json.put("data", array);
 		} catch (SQLException | JSONException e) {

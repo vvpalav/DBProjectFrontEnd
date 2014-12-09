@@ -32,6 +32,7 @@
 	str = '<p> These are the users you follow</p>'
 	str = str + ' <ul class="navigation"> '
 	for(var i = 0; i < myVar.length; i++){
+		//alert(myVar[i]);
 		str = str + ' <li> <a href="userfollow.html?followuser='+myVar[i]+'?user='+user+'" target="_parent">' + myVar[i] + '</a> </li> ';
 	}
 	str = str + '<li> <a href="alluser.html?user='+user+'"target="_parent">Add more Users</a></li>';
