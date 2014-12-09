@@ -28,115 +28,128 @@ public class FetchDataFromDB extends HttpServlet{
 		try {
 			JSONObject input = new JSONObject(req.getParameter("json"));
 			String type = input.getString("type");
-			System.out.println("Received data fetch request with type: " + type);
+			System.out
+					.println("Received data fetch request with type: " + type);
 			System.out.println(input);
-			if(type.equalsIgnoreCase("fetchArtistListForUser")){
-				writeOnResponse(resp, db.getArtistListForUser(input.getString("username")));
-			} else if(type.equalsIgnoreCase("fetchArtistInfoAndConcertList")){
+			if (type.equalsIgnoreCase("fetchArtistListForUser")) {
+				writeOnResponse(resp,
+						db.getArtistListForUser(input.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchArtistInfoAndConcertList")) {
 				String aname = input.getString("aname");
 				JSONObject object = db.getArtistInfo(aname);
 				object.put("concertList", db.getConcertListForArtist(aname));
 				writeOnResponse(resp, object);
-			} else if(type.equalsIgnoreCase("fetchGenreAndConcertList")){
+			} else if (type.equalsIgnoreCase("fetchGenreAndConcertList")) {
 				JSONObject object = new JSONObject();
-				object.put("concertList", db.getConcertListForGenre(input.getString("genre")));
+				object.put("concertList",
+						db.getConcertListForGenre(input.getString("genre")));
 				writeOnResponse(resp, object);
-			} else if (type.equalsIgnoreCase("fetchGenreListForUser")){
-				writeOnResponse(resp, db.getGenreListForUser(input.getString("username")));
-			} else if (type.equalsIgnoreCase("fetchAllArtistList")){
-				writeOnResponse(resp, db.getAllArtistList(input.getString("username")));
-			} else if (type.equalsIgnoreCase("fetchAllGenreList")){
-				writeOnResponse(resp, db.getAllGenreList(input.getString("username")));
-			} else if (type.equalsIgnoreCase("followArtistForUser") 
-					&& db.insertArtistIntoUserFollowList(input)){
+			} else if (type.equalsIgnoreCase("fetchGenreListForUser")) {
+				writeOnResponse(resp,
+						db.getGenreListForUser(input.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchAllArtistList")) {
+				writeOnResponse(resp,
+						db.getAllArtistList(input.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchAllGenreList")) {
+				writeOnResponse(resp,
+						db.getAllGenreList(input.getString("username")));
+			} else if (type.equalsIgnoreCase("followArtistForUser")
+					&& db.insertArtistIntoUserFollowList(input)) {
 				JSONObject json = new JSONObject();
 				json.put("status", "success");
-				writeOnResponse(resp,json);
-			} else if (type.equalsIgnoreCase("followGenreForUser")){
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("followGenreForUser")) {
 				JSONObject json = new JSONObject();
 				json.put("status", "failure");
 				boolean flag = false;
 				String genre = db.getGenreIdByName(input.getString("genre"));
 				String user = input.getString("username");
-				for(String str : db.getAllSubGenreForGenre(genre)){
+				for (String str : db.getAllSubGenreForGenre(genre)) {
 					flag = db.insertGenreIntoUserFollowList(user, genre, str);
 				}
-				if(flag) json.put("status", "success");
-				writeOnResponse(resp,json);
-			} else if(type.equalsIgnoreCase("updateuserinformation")){
+				if (flag)
+					json.put("status", "success");
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("updateuserinformation")) {
 				JSONObject json = new JSONObject();
 				json.put("status", "failure");
 				if (db.updateUserEntryDB(input)) {
 					json.put("status", "success");
 				}
-				writeOnResponse(resp,json);
-			} else if (type.equalsIgnoreCase("checkIfUserIsFollowingArtist")){
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("checkIfUserIsFollowingArtist")) {
 				JSONObject newJson = new JSONObject();
 				newJson.put("status", "failure");
-				if(db.checkIfUserIsFollowingArtist(input)){
+				if (db.checkIfUserIsFollowingArtist(input)) {
 					newJson.put("status", "success");
 				}
-				writeOnResponse(resp,newJson);
-			} else if(type.equalsIgnoreCase("checkIfUserIsFollowingGenre")){
+				writeOnResponse(resp, newJson);
+			} else if (type.equalsIgnoreCase("checkIfUserIsFollowingGenre")) {
 				JSONObject newJson = new JSONObject();
 				newJson.put("status", "failure");
-				if(db.checkIfUserIsFollowingGenre(input)){
+				if (db.checkIfUserIsFollowingGenre(input)) {
 					newJson.put("status", "success");
 				}
-				writeOnResponse(resp,newJson);
-			} else if(type.equalsIgnoreCase("fetchRecommendedConcertList")){
-				writeOnResponse(resp, db.getRecommendedConcertListForUser(input.getString("username")));
-			} else if (type.equalsIgnoreCase("getConcertInfoFromConcertId")){
+				writeOnResponse(resp, newJson);
+			} else if (type.equalsIgnoreCase("fetchRecommendedConcertList")) {
+				writeOnResponse(resp, db.getRecommendedConcertListForUser(input
+						.getString("username")));
+			} else if (type.equalsIgnoreCase("getConcertInfoFromConcertId")) {
 				String concertId = input.getString("concertId");
 				JSONObject object = db.getConcertInfoFromConcertId(concertId);
-				object.put("concertComments", db.getConcertCommentsForConcert(concertId));
+				object.put("concertComments",
+						db.getConcertCommentsForConcert(concertId));
 				writeOnResponse(resp, object);
-			} else if(type.equalsIgnoreCase("checkIfUserRSVPForConcert")){
+			} else if (type.equalsIgnoreCase("checkIfUserRSVPForConcert")) {
 				JSONObject newJson = new JSONObject();
 				newJson.put("status", "failure");
-				if(db.checkIfUserRSVPForConcert(input)){
+				if (db.checkIfUserRSVPForConcert(input)) {
 					newJson.put("status", "success");
 				}
-				writeOnResponse(resp,newJson);
-			} else if(type.equalsIgnoreCase("fetchAllConcerts")){
-				writeOnResponse(resp,db.fetchAllConcertsInSystem());
-			}
-			else if(type.equalsIgnoreCase("RSVPtoConcert")){
+				writeOnResponse(resp, newJson);
+			} else if (type.equalsIgnoreCase("fetchAllConcerts")) {
+				writeOnResponse(resp, db.fetchAllConcertsInSystem());
+			} else if (type.equalsIgnoreCase("RSVPtoConcert")) {
 				JSONObject json = new JSONObject();
 				json.put("status", "failure");
-				if(db.insertUserRSVP(input)){
+				if (db.insertUserRSVP(input)) {
 					json.put("status", "success");
 				}
-				writeOnResponse(resp,json);
-			}
-			else if(type.equalsIgnoreCase("postreview")){
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("postreview")) {
 				JSONObject json = new JSONObject();
 				json.put("status", "failure");
-				if(db.insertUserCommentOnConcert(input)){
+				if (db.insertUserCommentOnConcert(input)) {
 					json.put("status", "success");
 				}
-				writeOnResponse(resp,json);
-			}
-			else if (type.equalsIgnoreCase("fetchFollowedUserList")){
-				writeOnResponse(resp, db.getFollowedUserList(input.getString("username")));
-			}
-			else if (type.equalsIgnoreCase("fetchAllUserList")){
-				writeOnResponse(resp, db.getAllUser(input.getString("username")));
-			}
-			else if(type.equalsIgnoreCase("fetchUserInfo")){
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("fetchFollowedUserList")) {
+				writeOnResponse(resp,
+						db.getFollowedUserList(input.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchAllUserList")) {
+				writeOnResponse(resp,
+						db.getAllUser(input.getString("username")));
+			} else if (type.equalsIgnoreCase("fetchUserInfo")) {
 				String username = input.getString("followuser");
 				JSONObject object = db.getUserInfo(username);
-				//object.put("concertList", db.getConcertListForArtist(aname));
+				// object.put("concertList", db.getConcertListForArtist(aname));
 				writeOnResponse(resp, object);
-			}
-			else if(type.equalsIgnoreCase("followUser")){
+			} else if (type.equalsIgnoreCase("followUser")) {
 				JSONObject json = new JSONObject();
 				json.put("status", "failure");
-				if(db.insertIntoFollow(input)){
+				if (db.insertIntoFollow(input)) {
 					json.put("status", "success");
 				}
-				writeOnResponse(resp,json);
-			}		} catch (JSONException e) {
+				writeOnResponse(resp, json);
+			} else if (type.equalsIgnoreCase("checkIfUserIsFollowingUser")){
+				JSONObject json = new JSONObject();
+				json.put("status", "failure");
+				if(db.checkIfUserIsFollowingUser(input)){
+					json.put("status", "success");
+				}
+				writeOnResponse(resp, json);
+			}
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}

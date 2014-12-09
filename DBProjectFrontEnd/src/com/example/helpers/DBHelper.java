@@ -574,6 +574,24 @@ public class DBHelper {
 		return false;
 	}
 	
+	public boolean checkIfUserIsFollowingUser(JSONObject json){
+		String sql = "select count(*) from user_to_user_follow where my_uid = ?"
+				+ " and following_aid = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, json.getString("username"));
+			stmt.setString(2, getArtistId(json.getString("following_uid")));
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return (rs.getInt(1) > 0);
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	public JSONObject getRecommendedConcertListForUser(String username){
 		HashSet<String> set = new HashSet<String>();
 		JSONObject json = new JSONObject();
@@ -617,6 +635,7 @@ public class DBHelper {
 					array.put(t);
 				}
 			}
+			
 			
 			//Concerts recommended by system based on artist and his followers
 			JSONArray conList = getConcertListBasedOnArtistsFollowers(username).getJSONArray("data");
