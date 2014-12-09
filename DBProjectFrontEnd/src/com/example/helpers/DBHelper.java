@@ -581,7 +581,7 @@ public class DBHelper {
 		try {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, json.getString("username"));
-			stmt.setString(2, getArtistId(json.getString("following_uid")));
+			stmt.setString(2, json.getString("following_uid"));
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			return (rs.getInt(1) > 0);

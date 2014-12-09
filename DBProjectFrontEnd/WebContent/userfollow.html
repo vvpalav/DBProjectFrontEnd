@@ -43,7 +43,7 @@
 				document.getElementById("company").innerHTML = "Last Name: " + json.last_name;
 				document.getElementById("webpage").innerHTML = "Date of Birth: "+json.dob;
 				var skills = json.skills;
-				alert(json.email);
+				//alert(json.email);
 				document.getElementById("skills").innerHTML = "email:" + json.email;
 				document.getElementById("city").innerHTML = "City: " +json.city;
 				//updateDataSet(json.concertList);
@@ -59,9 +59,7 @@
 	}
 	
 	function checkIfUserIsFollowingArtist(u){
-		alert("hi");
 		var jsonStr = '{ "username" : "' + username + '", "type" : "checkIfUserIsFollowingUser", "following_uid" : "'+ followuser +'" }'
-		alert(jsonStr);
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
 		xmlhttp.onreadystatechange = function() {
@@ -82,7 +80,7 @@
 	function performAction(){
 		var button = document.getElementsByName("dyncamicButton");
 			var jsonStr = '{ "userId" : "' + username + '", "type" : "followUser", "username" : "'+followuser+'" }'
-			alert(jsonStr)
+			//alert(jsonStr)
 			var xht = new XMLHttpRequest();
 			xht.open("POST", "FetchDataFromDB", true);
 			xht.onreadystatechange = function() {
