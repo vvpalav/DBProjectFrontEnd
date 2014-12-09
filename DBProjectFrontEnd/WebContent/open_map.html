@@ -23,6 +23,14 @@
 	var mapOptions, map;
 	
 	function initialize() {
+		mapOptions = {
+				center : new google.maps.LatLng(-20, 10),
+				zoom : 3,
+				mapTypeId : google.maps.MapTypeId.ROADMAP
+			};
+
+			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({'address' : address}, function(results, status) {
 			
