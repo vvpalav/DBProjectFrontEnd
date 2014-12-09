@@ -18,6 +18,7 @@
 
 	var array = window.location.search.replace("?", "").split("?");
 	var concertid = "", username = "";
+	var venue;
 	
 	for (var i = 0; i < array.length; i++){
 		if(array[i] != null && array[i].length > 0){
@@ -55,6 +56,7 @@
 				document.getElementById("availabletickets").innerHTML = "Available Tickets: " + json.availableTickets;
 				document.getElementById("ticketprices").innerHTML = "Ticket Price: " + json.price;
 				document.getElementById("concertcapacity").innerHTML = "Total Concert Capacity: " + json.capacity;
+				venue = json.venue;
 			}
 		};
 		xh.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -131,7 +133,10 @@
 		window.location = "home.html?user="+username;
 	}
 	
-
+	function openMap(){
+		window.location = 'open_map.html?address='+venue;
+	}
+	
 </script>
 <style type="text/css">
 label{
@@ -156,6 +161,7 @@ label{
 		 <label id="concertcapacity">10</label><br>
 	</div>
 	<div style="position: absolute; width:200px; right: 10px; margin-top:70px;">
+		<input onclick="openMap()" type="button" name="map" value="Show On Map">
 	 	<input onclick="performAction()" type="button" name="dyncamicButton" value="RSVP"><br>
 	 	<input onclick="addComments()" type="button" name="dyncamicButton" value="Add Review">
 	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Homepage">
