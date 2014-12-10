@@ -32,6 +32,7 @@
 	}
 	
 	function fetchArtistInfoAndConcertList(){
+		fetchConcertList();
 		var jsonStr = '{ "followuser" : "' + followuser + '", "type" : "fetchUserInfo" }';
 		var xh = new XMLHttpRequest();
 		xh.open("POST", "FetchDataFromDB", true);
@@ -54,11 +55,11 @@
 		
 		var button = document.getElementsByName("dyncamicButton");
 		if(username != null && username.length > 0){
-			checkIfUserIsFollowingArtist();
+			checkIfUserIsFollowingUser();
 		}
 	}
 	
-	function checkIfUserIsFollowingArtist(u){
+	function checkIfUserIsFollowingUser(u){
 		var jsonStr = '{ "username" : "' + username + '", "type" : "checkIfUserIsFollowingUser", "following_uid" : "'+ followuser +'" }'
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "FetchDataFromDB", true);
@@ -98,6 +99,20 @@
 			xht.send("json=" + jsonStr);
 	}
 	
+	function fetchConcertList() {
+    	var jsonStr = '{ "username" : "' + followuser + '", "type" : "fetchRecommendedConcertList" }';
+    	var xh = new XMLHttpRequest();
+		xh.open("POST", "FetchDataFromDB", true);
+		xh.onreadystatechange = function() {
+			if (xh.readyState == 4 && xh.status == 200) {
+				var json = JSON.parse(xh.responseText);
+				updateDataSet(json.data);
+			}
+		};
+		xh.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xh.send("json=" + jsonStr);
+    }
+	
 	function updateDataSet(myVar){
 		var dataSet = [];
 		for (var i = 0; i < myVar.length; i++){
@@ -121,6 +136,7 @@
                 { "width" : "10%", "title": "Concert Id", "class": "center" },
                 { "width" : "11%", "title": "Concert Name", "class": "center" },
                 { "width" : "15%", "title": "Webpage", "class": "center" },
+                { "width" : "5%", "title": "Artist", "class": "center" },
                 { "width" : "5%", "title": "Genre", "class": "center" },
                 { "width" : "10%", "title": "Date", "class": "center" },
                 { "width" : "5%", "title": "Price", "class": "center" },
@@ -156,7 +172,7 @@ label{
 	 	<input onclick="homepagelink()" type="button" name="dyncamicButton" value="Home">
 	 </div>
   </div>
-	<div id="concertsList" style="position: absolute; margin-top : 170px; text-align:center;">
+	<div id="concertsList" style="position: absolute; margin-top : 250px; text-align:center;">
 		<table class="display" id="example"></table>
 	</div>
 </body>
